@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { ApiError } from "../services";
 import { validateToken, generateTokens } from "../services/token";
-import { loginService, registrationService } from "../services/auth";
+import { loginService, registrationService, profileService } from "../services/auth";
 import status from "../utils/status";
 import { AuthMessages } from "../constants/response-messages";
 
@@ -15,7 +15,7 @@ export async function loginController(req: Request, res: Response) {
         path: "/",
         secure: true
       });
-      res.cookie("token", response.token, {
+      res.cookie("token", response.accessToken, {
         domain: process.env.DOMAIN,
         path: "/",
         secure: false
@@ -27,7 +27,7 @@ export async function loginController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -44,9 +44,22 @@ export async function registrationController(req: Request, res: Response) {
   }
 }
 
+export async function profileController(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const response = await profileService(id);
+    return res.status(status.SUCCESS).json(response);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    return res.status(status.BAD_REQUEST).json({
+      error: e.message
+    });
+  }
+}
+
 export async function refreshTokenController(req: Request, res: Response) {
   try {
-    const refreshToken = req.cookies["refreshToken"];
+    const refreshToken = req.body.refreshToken;
 
     if (!refreshToken) throw ApiError.BadRequestError(AuthMessages.problemWithToken);
 
@@ -73,7 +86,7 @@ export async function refreshTokenController(req: Request, res: Response) {
     });
 
     return res.status(status.SUCCESS).json({
-      token: tokensData.accessToken
+      accessToken: tokensData.accessToken
     });
   } catch (e) {
     if (!(e instanceof Error)) return;

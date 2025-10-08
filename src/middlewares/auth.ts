@@ -15,7 +15,12 @@ export default async function (req: RequestWithAuthUserType, res: Response, next
     if (!userData) {
       return res.status(status.BAD_REQUEST).json({ message: AuthMessages.destroyedToken });
     }
-    req.user = userData as TokenDataType;
+
+    const tokenData: TokenDataType = {
+      id: userData._id,
+      exp: userData.exp
+    };
+    req.user = tokenData;
     return next();
   } catch (err) {
     console.log(err);

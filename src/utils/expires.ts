@@ -1,4 +1,4 @@
 export default {
-  expiresAccessToken: "15m",
+  expiresAccessToken: "2m",
   expiresRefreshToken: "30d"
 } as const;

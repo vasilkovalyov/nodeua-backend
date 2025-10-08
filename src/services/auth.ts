@@ -19,11 +19,10 @@ export async function loginService({ email, password }: UserLoginType) {
   const token = await generateTokens({
     _id: userModel?._id.toString()
   });
-
   return {
     _id: userModel._id,
     email: userModel.email,
-    token: token.accessToken,
+    accessToken: token.accessToken,
     refreshToken: token.refreshToken
   };
 }
@@ -45,4 +44,10 @@ export async function registrationService({ email, password }: UserLoginType) {
   return {
     message: AuthMessages.userCreated
   };
+}
+
+export async function profileService(id: string) {
+  const response = await UserModel.findById(id);
+
+  return response;
 }
