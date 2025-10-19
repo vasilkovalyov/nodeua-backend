@@ -19,6 +19,7 @@ export async function loginService({ email, password }: UserLoginType) {
   const token = await generateTokens({
     _id: userModel?._id.toString()
   });
+
   return {
     _id: userModel._id,
     email: userModel.email,

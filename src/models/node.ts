@@ -1,33 +1,34 @@
-export type ServiceNodeType = {
-  _id: string;
-  name: string;
-  image: string;
-  installation_price: number;
-  price_per_month: number;
-  link: string;
-  is_active: boolean;
-  is_tba: boolean;
-  with_keys_only: boolean;
-  with_new_only: boolean;
-  guide: boolean;
-  is_reneweble: boolean;
-  is_soldout: boolean;
-  max_duration: number;
-  discount_percentage: number;
-  is_node_of_the_week: boolean;
-};
+import { Schema, model, Document, Types } from "mongoose";
+import { NodeType } from "types/node";
 
-export type ServiceNodeDescriptionType = {
-  _id: string;
-  description: string;
-  short_description: string;
-  type: string;
-  roadmap: string;
-  fundsraised: string;
-  site_link: string;
-  twitter_link: string;
-  github_link: string;
-  discord_link: string;
-  telegram_link: string;
-  guide_link: string;
-};
+export type ServiceNodeDBModelType = {
+  description: Types.ObjectId | ServiceNodeDBModelType;
+} & Document &
+  NodeType;
+
+export const NodeSchema = new Schema<ServiceNodeDBModelType>(
+  {
+    name: { type: String, required: true },
+    image: { type: String },
+    price: { type: Number },
+    link: { type: String },
+    is_active: { type: Boolean },
+    guide: { type: Boolean },
+    is_reneweble: { type: Boolean },
+    is_soldout: { type: Boolean },
+    max_duration: { type: Number },
+    ip_node: { type: String },
+    description: {
+      type: Schema.Types.ObjectId,
+      ref: "NodeDescription",
+      required: true
+    }
+  },
+  {
+    timestamps: true
+  }
+);
+
+export const Node = model("Node", NodeSchema);
+
+export default Node;

@@ -1,45 +1,66 @@
-import nodes from "../static-data/nodes.json";
-import nodesDescription from "../static-data/nodes-descriptions.json";
-import ApiError from "./api-error";
-import { AuthMessages } from "../constants/response-messages";
+import { CreateNodeProps, UpdateNodeProps } from "../types/node";
+import NodeModel from "../models/node";
+import NodeDescriptionModel from "../models/node-description";
+import { adaperNodeToNodeModel, adaperNodeToNodeDescriptionModel } from "../adapters/node";
 
-export function getAllNodesService() {
-  const filters = {
-    active: nodes.filter((n) => n.is_active && !n.is_soldout && !n.is_tba),
-    soldout: nodes.filter((n) => n.is_soldout),
-    tba: nodes.filter((n) => n.is_tba)
+export async function getAllNodesService() {
+  const isActiveNodes = await NodeModel.find({ is_active: true, is_soldout: false });
+  const isSoldoutNodes = await NodeModel.find({ is_soldout: true });
+
+  return {
+    active: isActiveNodes,
+    soldout: isSoldoutNodes
   };
-
-  return filters;
 }
 
-export function getNodesByIdArrayService(ids: string[]) {
-  const objIds = {};
-  for (const key of ids) {
-    objIds[key] = objIds;
-  }
+export async function getNodesForCart(ids: string[]) {
+  const nodes = await NodeModel.find({
+    _id: { $in: ids }
+  }).select("name price max_duration");
 
-  const nodeResponse = nodes.filter((node) => {
-    if (objIds[node._id]) {
-      return node;
-    }
-    return null;
-  });
+  return nodes;
+}
+
+export async function getNodeService(id: string) {
+  const nodeResponse = await NodeModel.findById(id).populate("description");
 
   return nodeResponse;
 }
 
-export function getNodeService(id: string) {
-  const nodeResponse = nodes.filter((node) => node._id === id);
+export async function createNodeService(node: CreateNodeProps) {
+  const nodeDescriptionModel = await new NodeDescriptionModel(adaperNodeToNodeDescriptionModel(node));
 
-  if (!nodeResponse.length) {
-    throw ApiError.BadRequestError(AuthMessages.nodeInfoNotExist);
-  }
+  const nodeModel = await new NodeModel({
+    ...adaperNodeToNodeModel(node),
+    description: nodeDescriptionModel._id
+  });
 
-  const nodeResponseDescription = nodesDescription.filter((node) => node._id === id);
+  await nodeDescriptionModel.save();
+  await nodeModel.save();
 
   return {
-    ...nodeResponse[0],
-    description: nodeResponseDescription[0]
+    message: "Node has been created",
+    nodeId: nodeModel._id
+  };
+}
+
+export async function updateNodeService(node: UpdateNodeProps) {
+  const { _id } = node;
+  const baseNodeProps = adaperNodeToNodeModel(node);
+  const descriptionNodeProps = adaperNodeToNodeDescriptionModel(node);
+
+  const nodeModel = await NodeModel.findByIdAndUpdate(_id, baseNodeProps);
+
+  if (nodeModel) {
+    nodeModel?.save();
+    const nodeDescriptionModel = await NodeDescriptionModel.findByIdAndUpdate(
+      nodeModel.description,
+      descriptionNodeProps
+    );
+    nodeDescriptionModel?.save();
+  }
+
+  return {
+    message: "Node has been updates"
   };
 }

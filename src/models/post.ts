@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-export type PostType = {
+export interface PostType extends Document {
   id: string;
   heading: string;
   slug: string;
@@ -10,17 +10,17 @@ export type PostType = {
   image?: string;
   seo_description?: string;
   seo_keywords?: string;
-};
+}
 
 export const PostSchema = new Schema<PostType>(
   {
     heading: { type: String, required: true, unique: true },
     slug: { type: String, required: true, unique: true },
-    short_description: { type: String, default: null },
-    rich_text: { type: String, default: null },
-    image: { type: String, default: null },
-    seo_description: { type: String, default: null },
-    seo_keywords: { type: String, default: null }
+    short_description: { type: String },
+    rich_text: { type: String },
+    image: { type: String },
+    seo_description: { type: String },
+    seo_keywords: { type: String }
   },
   {
     timestamps: true

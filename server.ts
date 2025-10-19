@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 
 import authRouter from "./src/routes/auth";
 import nodesRouter from "./src/routes/nodes";
+import userRouter from "./src/routes/user";
 
 import databaseConnect from "./database";
 
@@ -40,6 +41,7 @@ import databaseConnect from "./database";
 
   server.use("/api", authRouter);
   server.use("/api", nodesRouter);
+  server.use("/api", userRouter);
 
   try {
     databaseConnect(process.env.MONGO_URL)
