@@ -1,8 +1,8 @@
 import Joi from "joi";
-import { UserLoginType } from "../types/user";
+import { UserLoginParams } from "../types/user";
 import { AuthValidation } from "../constants/validation-messages";
 
-const studentRegistrationSchema = Joi.object<UserLoginType>({
+const studentRegistrationSchema = Joi.object<UserLoginParams>({
   email: Joi.string().required().messages({
     "string.login": AuthValidation.LoginValidation
   }),

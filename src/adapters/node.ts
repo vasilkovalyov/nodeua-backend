@@ -1,4 +1,6 @@
-import { CreateNodeProps, NodeDescriptionType } from "../types/node";
+import { CreateNodeProps } from "models/node/node-model-type";
+import { getDaysCountBetweenDates } from "../utils/dates";
+import { NodeDescriptionType } from "../models/node-description/node-description-model-type";
 
 export function adaperNodeToNodeModel(params: CreateNodeProps) {
   return {
@@ -10,8 +12,12 @@ export function adaperNodeToNodeModel(params: CreateNodeProps) {
     guide: params.guide,
     is_reneweble: params.is_reneweble,
     is_soldout: params.is_soldout,
-    max_duration: params.max_duration,
-    ip_node: params.ip_node
+    max_duration_months: params.max_duration_months,
+    max_duration_days: getDaysCountBetweenDates(new Date(), new Date(params.end_date)),
+    ip_node: params.ip_node,
+    id_node: params.id_node,
+    key_node: params.key_node,
+    end_date: params.end_date
   };
 }
 

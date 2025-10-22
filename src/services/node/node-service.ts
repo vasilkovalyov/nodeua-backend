@@ -1,24 +1,27 @@
-import { CreateNodeProps, UpdateNodeProps } from "../types/node";
-import NodeModel from "../models/node";
-import NodeDescriptionModel from "../models/node-description";
-import { adaperNodeToNodeModel, adaperNodeToNodeDescriptionModel } from "../adapters/node";
+import NodeModel from "../../models/node/node-model";
+import NodeDescriptionModel from "../../models/node-description/node-description-model";
+import { adaperNodeToNodeModel, adaperNodeToNodeDescriptionModel } from "../../adapters/node";
+import { getNodeServicesFormatedMaxDuration } from "./node-service.helpers";
+import { CreateNodeProps, NodeType, UpdateNodeProps } from "../../models/node/node-model-type";
 
 export async function getAllNodesService() {
-  const isActiveNodes = await NodeModel.find({ is_active: true, is_soldout: false });
-  const isSoldoutNodes = await NodeModel.find({ is_soldout: true });
+  const isActiveNodes = await NodeModel.find({ is_active: true, is_soldout: false }).lean();
+  const isSoldoutNodes = await NodeModel.find({ is_soldout: true }).lean();
 
   return {
-    active: isActiveNodes,
-    soldout: isSoldoutNodes
+    active: getNodeServicesFormatedMaxDuration(isActiveNodes),
+    soldout: getNodeServicesFormatedMaxDuration(isSoldoutNodes)
   };
 }
 
 export async function getNodesForCart(ids: string[]) {
-  const nodes = await NodeModel.find({
+  const nodes: NodeType[] = await NodeModel.find({
     _id: { $in: ids }
-  }).select("name price max_duration");
+  })
+    .select("name price max_duration_months max_duration_days end_date createdAt")
+    .lean();
 
-  return nodes;
+  return getNodeServicesFormatedMaxDuration(nodes);
 }
 
 export async function getNodeService(id: string) {
@@ -40,7 +43,7 @@ export async function createNodeService(node: CreateNodeProps) {
 
   return {
     message: "Node has been created",
-    nodeId: nodeModel._id
+    node_id: nodeModel._id
   };
 }
 

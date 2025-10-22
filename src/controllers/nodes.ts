@@ -6,11 +6,11 @@ import {
   getNodesForCart,
   createNodeService,
   updateNodeService
-} from "../services/nodes";
+} from "../services/node/node-service";
 import status from "../utils/status";
-import { CreateNodeProps, UpdateNodeProps } from "../types/node";
 
 import ApiError from "../services/api-error";
+import { CreateNodeProps, UpdateNodeProps } from "../models/node/node-model-type";
 
 export async function nodesController(req: Request, res: Response) {
   try {

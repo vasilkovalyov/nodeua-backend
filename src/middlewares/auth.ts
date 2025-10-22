@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { validateToken } from "../services/token";
+import { validateToken } from "../services/token/token-service";
 import { TokenDataType, RequestWithAuthUserType } from "../types/token";
 import status from "../utils/status";
 import { AuthMessages } from "../constants/response-messages";
@@ -7,6 +7,7 @@ import { AuthMessages } from "../constants/response-messages";
 export default async function (req: RequestWithAuthUserType, res: Response, next: NextFunction) {
   try {
     const headerToken = req.headers.authorization;
+
     if (!headerToken) {
       return res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
     }
@@ -17,9 +18,10 @@ export default async function (req: RequestWithAuthUserType, res: Response, next
     }
 
     const tokenData: TokenDataType = {
-      id: userData._id,
+      userId: userData.userId,
       exp: userData.exp
     };
+
     req.user = tokenData;
     return next();
   } catch (err) {

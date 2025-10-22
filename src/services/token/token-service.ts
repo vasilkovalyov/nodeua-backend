@@ -1,13 +1,6 @@
 import jwt from "jsonwebtoken";
-import expires from "../utils/expires";
-
-export type TokenVerifyResponseType = {
-  _id: string;
-  iat: number;
-  exp: number;
-};
-
-type TokenType = "access" | "refresh";
+import expires from "../../utils/expires";
+import { TokenType, TokenVerifyResponseType } from "./token.type";
 
 export function generateTokens(payload: { _id: string }) {
   return {
@@ -27,5 +20,6 @@ export function generateRefreshToken(userId: string) {
 export function validateToken(token: string, type: TokenType = "access"): TokenVerifyResponseType {
   const tokenString = type === "access" ? process.env.JWT_ACCESS_SECRET : process.env.JWT_REFRESH_SECRET;
   const userData = jwt.verify(token, tokenString as string);
+
   return userData as TokenVerifyResponseType;
 }

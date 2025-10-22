@@ -7,5 +7,6 @@ export enum AuthMessages {
   userCreated = "User created",
   userNotFound = "User not found",
   problemWithToken = "Problem with token",
-  nodeInfoNotExist = "Node info not exist"
+  nodeInfoNotExist = "Node info not exist",
+  nodeNotFound = "Node not found"
 }

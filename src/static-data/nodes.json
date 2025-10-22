@@ -9,7 +9,7 @@
     "guide": false,
     "is_reneweble": true,
     "is_soldout": false,
-    "max_duration": 12
+    "max_duration_months": 12
   },
   {
     "_id": "67a902e1255dc32f723614db",
@@ -22,21 +22,19 @@
 
     "is_soldout": false,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true
   },
   {
     "_id": "67bdbef93515f7a9a7348cc0",
     "name": "Pipe VIP",
     "image": "https://xnode.fra1.cdn.digitaloceanspaces.com/pipe_square.png",
-
     "price": 29,
     "link": "https://medium.com/@xNodeTeam/run-your-pipe-node-on-xnode-cbbf60202973",
     "is_active": true,
-
     "is_soldout": false,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -44,14 +42,12 @@
     "_id": "67bc998a3515f7a9a71207eb",
     "name": "Pipe",
     "image": "https://xnode.fra1.cdn.digitaloceanspaces.com/pipe_square.png",
-
     "price": 15,
     "link": "https://medium.com/@xNodeTeam/run-your-pipe-node-on-xnode-cbbf60202973",
     "is_active": true,
-
     "is_soldout": false,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -59,42 +55,36 @@
     "_id": "6670a0d92ff85293453794ba",
     "name": "Nubit",
     "image": "https://xnode.fra1.cdn.digitaloceanspaces.com/nubit.png",
-
     "price": 5,
     "link": "",
     "is_active": true,
-
     "guide": false,
     "is_reneweble": true,
     "is_soldout": true,
-    "max_duration": 12
+    "max_duration_months": 12
   },
   {
     "_id": "67867c4d7f12016e91063349",
     "name": "InitVerse",
     "image": "https://xnode.fra1.cdn.digitaloceanspaces.com/InitVerse.png",
-
     "price": 18,
     "link": "",
     "is_active": true,
-
     "is_soldout": true,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true
   },
   {
     "_id": "6740bf16cadd7f5e30d314a9",
     "name": "Glacier",
     "image": "https://xnode.fra1.cdn.digitaloceanspaces.com/glacier.jpg",
-
     "price": 12,
     "link": "",
     "is_active": true,
-
     "is_soldout": true,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true
   },
   {
@@ -108,7 +98,7 @@
 
     "is_soldout": true,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true
   },
   {
@@ -122,7 +112,7 @@
 
     "is_soldout": true,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true
   },
   {
@@ -137,7 +127,7 @@
     "guide": false,
     "is_reneweble": true,
     "is_soldout": true,
-    "max_duration": 12
+    "max_duration_months": 12
   },
   {
     "_id": "66e8472a628c2e7793657402",
@@ -150,7 +140,7 @@
 
     "is_soldout": true,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true
   },
   {
@@ -164,7 +154,7 @@
 
     "is_soldout": true,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "linkKeys": "https://telegra.ph/Running-a-Rivalz-08-28"
   },
@@ -179,7 +169,7 @@
 
     "is_soldout": true,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/gaianet/"
@@ -196,7 +186,7 @@
     "guide": true,
     "is_reneweble": true,
     "is_soldout": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "linkKeys": "https://telegra.ph/Running-a-Rivalz-08-28"
   },
   {
@@ -210,7 +200,7 @@
 
     "is_soldout": true,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/cysic/"
@@ -226,7 +216,7 @@
 
     "is_soldout": true,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "linkKeys": "https://medium.com/@xNodeTeam/running-a-t3rn-3d18c1b4b186",
     "is_new": false
@@ -243,7 +233,7 @@
     "guide": true,
     "is_reneweble": true,
     "is_soldout": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "linkKeys": "",
     "is_new": false
   },
@@ -259,7 +249,7 @@
     "guide": true,
     "is_reneweble": true,
     "is_soldout": true,
-    "max_duration": 12
+    "max_duration_months": 12
   },
   {
     "_id": "673f22c2cadd7f5e30ee0f60",
@@ -272,7 +262,7 @@
 
     "is_soldout": true,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -288,7 +278,7 @@
     "is_soldout": true,
 
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -301,7 +291,7 @@
     "is_active": true,
     "is_soldout": false,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": true,
     "linkKeys": "https://xnode.pro/blog/mawari/"
@@ -317,7 +307,7 @@
 
     "is_soldout": false,
     "guide": true,
-    "max_duration": 3,
+    "max_duration_months": 3,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/nexus/"
@@ -333,7 +323,7 @@
 
     "is_soldout": false,
     "guide": true,
-    "max_duration": 3,
+    "max_duration_months": 3,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/neova/"
@@ -349,7 +339,7 @@
 
     "is_soldout": false,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/datagram/"
@@ -366,7 +356,7 @@
     "is_soldout": false,
 
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -382,7 +372,7 @@
     "is_soldout": false,
 
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/aztec/"
@@ -398,7 +388,7 @@
 
     "is_soldout": false,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -413,7 +403,7 @@
 
     "is_soldout": false,
     "guide": true,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false,
     "linkKeys": "https://xnode.pro/blog/dria/"
@@ -429,7 +419,7 @@
 
     "is_soldout": false,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -444,7 +434,7 @@
 
     "is_soldout": false,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   },
@@ -460,7 +450,7 @@
     "guide": false,
     "is_reneweble": true,
     "is_soldout": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_new": false
   },
   {
@@ -474,7 +464,7 @@
 
     "is_soldout": false,
     "guide": false,
-    "max_duration": 12,
+    "max_duration_months": 12,
     "is_reneweble": true,
     "is_new": false
   }

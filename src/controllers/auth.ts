@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import { ApiError } from "../services";
-import { validateToken, generateTokens } from "../services/token";
+import ApiError from "../services/api-error";
+import { validateToken, generateTokens } from "../services/token/token-service";
 import { loginService, registrationService, profileService } from "../services/auth";
 import status from "../utils/status";
 import { AuthMessages } from "../constants/response-messages";
@@ -67,7 +67,7 @@ export async function refreshTokenController(req: Request, res: Response) {
     if (!tokenData) throw ApiError.BadRequestError(AuthMessages.problemWithToken);
 
     const tokensData = generateTokens({
-      _id: tokenData._id
+      _id: tokenData.userId
     });
 
     if (!tokensData) {
