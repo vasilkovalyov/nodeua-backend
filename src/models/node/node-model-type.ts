@@ -7,7 +7,6 @@ export type NodeType = {
   name: string;
   image: string;
   price: number;
-  link: string;
   is_active: boolean;
   guide: boolean;
   is_reneweble: boolean;
@@ -17,7 +16,7 @@ export type NodeType = {
   ip_node: string;
   id_node: string;
   key_node: string;
-  end_date: Date;
+  expiration_date: Date;
 };
 
 export type NodeDBModelType = Document &

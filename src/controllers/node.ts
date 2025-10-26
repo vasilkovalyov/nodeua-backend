@@ -5,7 +5,9 @@ import {
   getAllNodesService,
   getNodesForCart,
   createNodeService,
-  updateNodeService
+  updateNodeService,
+  getAllNodesForAdminService,
+  getNodeForAdminService
 } from "../services/node/node-service";
 import status from "../utils/status";
 
@@ -15,6 +17,31 @@ import { CreateNodeProps, UpdateNodeProps } from "../models/node/node-model-type
 export async function nodesController(req: Request, res: Response) {
   try {
     const nodes = await getAllNodesService();
+    return res.status(status.SUCCESS).json(nodes);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    return res.status(status.BAD_REQUEST).json({
+      error: e.message
+    });
+  }
+}
+
+export async function adminNodesController(req: Request, res: Response) {
+  try {
+    const nodes = await getAllNodesForAdminService();
+    return res.status(status.SUCCESS).json(nodes);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    return res.status(status.BAD_REQUEST).json({
+      error: e.message
+    });
+  }
+}
+
+export async function adminNodeController(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const nodes = await getNodeForAdminService(id);
     return res.status(status.SUCCESS).json(nodes);
   } catch (e) {
     if (!(e instanceof Error)) return;

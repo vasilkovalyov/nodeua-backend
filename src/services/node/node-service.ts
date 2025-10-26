@@ -14,11 +14,16 @@ export async function getAllNodesService() {
   };
 }
 
+export async function getAllNodesForAdminService() {
+  const nodes = await NodeModel.find().lean();
+  return nodes;
+}
+
 export async function getNodesForCart(ids: string[]) {
   const nodes: NodeType[] = await NodeModel.find({
     _id: { $in: ids }
   })
-    .select("name price max_duration_months max_duration_days end_date createdAt")
+    .select("name price max_duration_months max_duration_days expiration_date createdAt")
     .lean();
 
   return getNodeServicesFormatedMaxDuration(nodes);
@@ -30,20 +35,24 @@ export async function getNodeService(id: string) {
   return nodeResponse;
 }
 
+export async function getNodeForAdminService(id: string) {
+  const nodeResponse = await NodeModel.findById(id).populate("description");
+
+  return nodeResponse;
+}
+
 export async function createNodeService(node: CreateNodeProps) {
   const nodeDescriptionModel = await new NodeDescriptionModel(adaperNodeToNodeDescriptionModel(node));
-
   const nodeModel = await new NodeModel({
     ...adaperNodeToNodeModel(node),
     description: nodeDescriptionModel._id
   });
 
   await nodeDescriptionModel.save();
-  await nodeModel.save();
+  const savedNode = await nodeModel.save();
 
   return {
-    message: "Node has been created",
-    node_id: nodeModel._id
+    _id: savedNode._id
   };
 }
 

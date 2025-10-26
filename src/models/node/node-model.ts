@@ -7,7 +7,6 @@ export const NodeSchema = new Schema<NodeDBModelType>(
     name: { type: String, required: true },
     image: { type: String },
     price: { type: Number },
-    link: { type: String },
     is_active: { type: Boolean, default: true },
     guide: { type: Boolean },
     is_reneweble: { type: Boolean, default: true },
@@ -17,7 +16,7 @@ export const NodeSchema = new Schema<NodeDBModelType>(
     ip_node: { type: String },
     id_node: { type: String },
     key_node: { type: String },
-    end_date: { type: Date },
+    expiration_date: { type: Date },
     description: {
       type: Types.ObjectId,
       ref: DB_MODEL_NAME.nodeDescription
