@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
 
 export type PostType = {
-  id: string;
+  _id: string;
   heading: string;
   slug: string;
   short_description: string;

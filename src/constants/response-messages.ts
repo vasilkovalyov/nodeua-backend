@@ -1,5 +1,8 @@
 export enum AuthMessages {
   unauthorized = "User is not authorized",
+  userNotAdmin = "User not admin",
+  adminAlreadyExist = "Admin already exist",
+  noCredentials = "There is no credentials",
   destroyedToken = "Token has destroyed",
   wrongPassword = "Wrong password",
   userLoginNotFound = "User with login not a found",

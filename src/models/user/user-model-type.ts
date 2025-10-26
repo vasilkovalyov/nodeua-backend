@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { UserRole } from "../../types/user-role";
 
 export type UserLoginParams = {
   email: string;
@@ -14,7 +15,8 @@ export type UserType = {
   _id: string;
   email: string;
   password: string;
-  balance: number;
+  balance?: number;
+  role: UserRole;
 };
 
 export type UserDBModelType = Document & UserType;

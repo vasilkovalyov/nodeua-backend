@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+
 import { AuthMessages } from "../../constants/response-messages";
 import UserModel from "../../models/user/user-model";
 import NodeModel from "../../models/node/node-model";
@@ -16,7 +18,9 @@ export async function topUpUserBalanceService(userId: string, amount: string) {
   const userModel = await UserModel.findById(userId);
   if (!userModel) throw ApiError.BadRequestError(AuthMessages.userNotFound);
 
-  userModel.balance += parseFloat(amount);
+  if (userModel.balance !== undefined) {
+    userModel.balance += parseFloat(amount);
+  }
 
   await userModel.save();
 
@@ -36,7 +40,7 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
 
   const totalNodesAmount = getTotalAmountNodes(nodesModel, nodes);
 
-  if (userModel.balance < totalNodesAmount) {
+  if (userModel.balance && userModel.balance < totalNodesAmount) {
     throw ApiError.BadRequestError("User does`t have enought money");
   }
 
@@ -58,7 +62,9 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
     await buyedNodeModel.save();
   });
 
-  userModel.balance -= totalNodesAmount;
+  if (userModel.balance !== undefined) {
+    userModel.balance -= totalNodesAmount;
+  }
 
   await userModel.save();
 
@@ -102,4 +108,28 @@ export async function getExpiredNodesService(userId: string) {
   return {
     buyed_nodes: inactiveNodes
   };
+}
+
+export async function createSuperAdmin() {
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!(email && password)) {
+    throw ApiError.BadRequestError(AuthMessages.noCredentials);
+  }
+
+  const existing = await UserModel.findOne({ email });
+  if (existing) {
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const superAdmin = new UserModel({
+    email,
+    password: hashedPassword,
+    role: "admin"
+  });
+
+  await superAdmin.save();
 }

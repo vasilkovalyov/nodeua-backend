@@ -67,7 +67,8 @@ export async function refreshTokenController(req: Request, res: Response) {
     if (!tokenData) throw ApiError.BadRequestError(AuthMessages.problemWithToken);
 
     const tokensData = generateTokens({
-      _id: tokenData.userId
+      _id: tokenData.userId,
+      isAdmin: tokenData.isAdmin
     });
 
     if (!tokensData) {

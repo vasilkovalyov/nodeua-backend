@@ -3,9 +3,9 @@ import status from "../utils/status";
 import {
   createPostService,
   deletePostService,
-  getPaginatedPostsService,
-  getPostService,
-  updatePostService
+  getPostsService,
+  updatePostService,
+  getPostService
 } from "../services/post";
 
 export async function createPostController(req: Request, res: Response) {
@@ -50,7 +50,7 @@ export async function getPostsController(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const response = await getPostService(id);
+    const response = await getPostsService(id);
     return res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (!(e instanceof Error)) return;
@@ -60,10 +60,11 @@ export async function getPostsController(req: Request, res: Response) {
   }
 }
 
-export async function getPaginatedPostsController(req: Request, res: Response) {
+export async function getPostController(req: Request, res: Response) {
   try {
-    const { size, page } = req.query as unknown as { size: string; page: string };
-    const response = await getPaginatedPostsService(parseInt(size), parseInt(page));
+    const { id } = req.params;
+
+    const response = await getPostService(id);
     return res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (!(e instanceof Error)) return;

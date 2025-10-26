@@ -6,10 +6,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import authRouter from "./src/routes/auth";
-import nodesRouter from "./src/routes/nodes";
+import nodesRouter from "./src/routes/node";
 import userRouter from "./src/routes/user";
 
 import databaseConnect from "./database";
+import { createSuperAdmin } from "./src/services/user/user-service";
 
 (async () => {
   const server: Express = express();
@@ -28,6 +29,7 @@ import databaseConnect from "./database";
     })
   );
 
+  createSuperAdmin();
   server.use(express.urlencoded({ extended: true }));
   server.use(compression());
   server.use(cookieParser());

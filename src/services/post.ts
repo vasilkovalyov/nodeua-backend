@@ -1,12 +1,9 @@
-import { PostType, PostModel } from "../models";
-import { getPaginationInfo } from "../utils/pagination";
+import { PostType } from "../models/post/post-model-type";
+import PostModel from "../models/post/post-model";
 
-export async function createPostService(data: PostType) {
-  const image = "";
-
+export async function createPostService(props: PostType) {
   const post = await new PostModel({
-    ...data,
-    image
+    ...props
   });
   await post.save();
 
@@ -16,13 +13,13 @@ export async function createPostService(data: PostType) {
   };
 }
 
-export async function updatePostService(data: PostType) {
+export async function updatePostService(props: PostType) {
   const image = "";
 
   await PostModel.findOneAndUpdate(
-    { _id: data._id },
+    { _id: props._id },
     {
-      ...data,
+      ...props,
       image
     },
     { new: true }
@@ -45,29 +42,12 @@ export async function deletePostService(id: string) {
   };
 }
 
-export async function getPaginatedPostsService(size: number, page: number) {
-  const total_count = await PostModel.countDocuments();
-  const { nextPage, total_pages, skip_size } = getPaginationInfo(size, page, total_count);
-  const posts = await PostModel.find({}, null, { sort: { createdAt: -1 } })
-    .skip(skip_size)
-    .limit(size)
-    .exec();
-
-  return {
-    total_count,
-    current_page: page,
-    next_page: nextPage,
-    total_pages: total_pages,
-    posts
-  };
-}
-
-export async function getPostService(id: string) {
+export async function getPostsService(id: string) {
   const post = await PostModel.findById(id);
   return post;
 }
 
-export async function getPostBySlugService(slug: string) {
+export async function getPostService(slug: string) {
   const post = await PostModel.findOne({ slug: slug });
   return post;
 }

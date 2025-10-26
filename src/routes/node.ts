@@ -5,15 +5,17 @@ import {
   nodesCartController,
   nodeCreateController,
   nodeUpdateController
-} from "../controllers/nodes";
+} from "../controllers/node";
 import authMiddleware from "../middlewares/auth";
+import isAdminRole from "../middlewares/is-admin-role";
 
 const router = express.Router();
+
+router.post("/create-node", authMiddleware, isAdminRole, nodeCreateController);
+router.put("/update-node", authMiddleware, isAdminRole, nodeUpdateController);
 
 router.get("/nodes/", nodesController);
 router.get("/nodes-cart/", authMiddleware, nodesCartController);
 router.get("/node/:id", nodeController);
-router.post("/create-node", authMiddleware, nodeCreateController);
-router.put("/update-node", authMiddleware, nodeUpdateController);
 
 export default router;
