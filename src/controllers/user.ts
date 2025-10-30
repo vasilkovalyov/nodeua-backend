@@ -21,7 +21,7 @@ export async function topUpBalanceController(req: RequestWithAuthUserType, res: 
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -37,7 +37,7 @@ export async function buyNodeController(req: RequestWithAuthUserType, res: Respo
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -52,7 +52,7 @@ export async function getActiveNodesController(req: RequestWithAuthUserType, res
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -67,7 +67,7 @@ export async function getExpiredNodesController(req: RequestWithAuthUserType, re
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }

@@ -21,7 +21,7 @@ export async function nodesController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -33,7 +33,7 @@ export async function adminNodesController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -46,7 +46,7 @@ export async function adminNodeController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -59,7 +59,7 @@ export async function nodesCartController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -73,7 +73,7 @@ export async function nodeController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof ApiError)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -86,7 +86,7 @@ export async function nodeCreateController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof ApiError)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -99,7 +99,7 @@ export async function nodeUpdateController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof ApiError)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }

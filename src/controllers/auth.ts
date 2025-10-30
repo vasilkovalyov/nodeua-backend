@@ -39,7 +39,7 @@ export async function registrationController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -52,7 +52,7 @@ export async function profileController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -92,8 +92,7 @@ export async function refreshTokenController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message,
-      message: "Refresh token expired"
+      message: e.message
     });
   }
 }

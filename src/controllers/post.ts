@@ -15,7 +15,7 @@ export async function createPostController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -27,7 +27,7 @@ export async function updatePostController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -41,7 +41,7 @@ export async function deletePostController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -55,7 +55,7 @@ export async function getPostsController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }
@@ -69,7 +69,7 @@ export async function getPostController(req: Request, res: Response) {
   } catch (e) {
     if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
-      error: e.message
+      message: e.message
     });
   }
 }

@@ -58,11 +58,13 @@ type UserBuyedNodeType = {
 };
 
 export async function getBuyedUserNodes(
+  userId: string,
   nodesIds: string[],
   date: Date,
   type: "active" | "inactive"
 ): Promise<UserBuyedNodeType[]> {
   const activeNodes = await BuyedNodeModel.find({
+    user: userId,
     node: { $in: nodesIds },
     expiration_date: { [type === "active" ? "$gte" : "$lt"]: date }
   })

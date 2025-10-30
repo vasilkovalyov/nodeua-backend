@@ -76,7 +76,7 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
 export async function getActiveNodesService(userId: string) {
   const now = new Date();
   const buyedNodesIds = await getBuyedNodesInfo(userId);
-  const activeNodes = await getBuyedUserNodes(Array.from(buyedNodesIds.keys()), now, "active");
+  const activeNodes = await getBuyedUserNodes(userId, Array.from(buyedNodesIds.keys()), now, "active");
 
   if (!activeNodes.length) {
     return {
@@ -97,7 +97,7 @@ export async function getActiveNodesService(userId: string) {
 export async function getExpiredNodesService(userId: string) {
   const now = new Date();
   const buyedNodesIds = await getBuyedNodesInfo(userId);
-  const inactiveNodes = await getBuyedUserNodes(Array.from(buyedNodesIds.keys()), now, "inactive");
+  const inactiveNodes = await getBuyedUserNodes(userId, Array.from(buyedNodesIds.keys()), now, "inactive");
 
   if (!inactiveNodes.length) {
     return {
