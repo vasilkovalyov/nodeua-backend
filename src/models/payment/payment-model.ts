@@ -1,8 +1,8 @@
 import { Schema, model, Types } from "mongoose";
 import { DB_MODEL_NAME } from "../../constants/model-names";
-import { BuyedNodeDBModelType } from "./buyed-node-model-type";
+import { PaymentDBModelType } from "./payment-model-type";
 
-export const BuyedNodeSchema = new Schema<BuyedNodeDBModelType>({
+export const PaymentSchema = new Schema<PaymentDBModelType>({
   count: { type: Number, required: true },
   expiration_date: { type: Date, required: true },
   purchase_date: { type: Date, required: true },
@@ -10,4 +10,4 @@ export const BuyedNodeSchema = new Schema<BuyedNodeDBModelType>({
   user: { type: Types.ObjectId, ref: DB_MODEL_NAME.user, required: true }
 });
 
-export default model<BuyedNodeDBModelType>(DB_MODEL_NAME.buyedNode, BuyedNodeSchema);
+export default model<PaymentDBModelType>(DB_MODEL_NAME.payment, PaymentSchema);

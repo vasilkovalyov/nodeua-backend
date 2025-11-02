@@ -2,7 +2,7 @@ import { Response } from "express";
 import status from "../utils/status";
 import {
   topUpUserBalanceService,
-  buyNodeService,
+  paymentNodeService,
   getActiveNodesService,
   getExpiredNodesService
 } from "../services/user/user-service";
@@ -26,13 +26,13 @@ export async function topUpBalanceController(req: RequestWithAuthUserType, res: 
   }
 }
 
-export async function buyNodeController(req: RequestWithAuthUserType, res: Response) {
+export async function paymentNodeController(req: RequestWithAuthUserType, res: Response) {
   try {
     const { nodes } = req.body;
     if (!req.user?.userId) {
       throw ApiError.BadRequestError(AuthMessages.userNotFound);
     }
-    const response = await buyNodeService(req.user.userId, nodes);
+    const response = await paymentNodeService(req.user.userId, nodes);
     return res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (!(e instanceof Error)) return;

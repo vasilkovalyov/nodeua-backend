@@ -1,4 +1,4 @@
-import BuyedNodeModel from "../../models/buyed-node/buyed-node-model";
+import PaymentModel from "../../models/payment/payment-model";
 import { NodePaymentCartType } from "../../types/node";
 import { NodeDBModelType } from "../../models/node/node-model-type";
 
@@ -35,20 +35,20 @@ export function calculateExpirationDateFromNodeCart(months: number, today: Date)
   return monthsLater;
 }
 
-export async function getBuyedNodesInfo(userId: string): Promise<Map<string, string>> {
-  const buyedNodes = await BuyedNodeModel.find({
+export async function getPaymentInfo(userId: string): Promise<Map<string, string>> {
+  const payments = await PaymentModel.find({
     user: userId
   }).select("node expiration_date");
   const nodesCollection = new Map();
 
-  for (const node of buyedNodes) {
+  for (const node of payments) {
     nodesCollection.set(node.node.toString(), node.expiration_date);
   }
 
   return nodesCollection;
 }
 
-type UserBuyedNodeType = {
+type UserPaymentType = {
   _id: string;
   name: string;
   image: string;
@@ -57,13 +57,13 @@ type UserBuyedNodeType = {
   key_node: string;
 };
 
-export async function getBuyedUserNodes(
+export async function getUserPayments(
   userId: string,
   nodesIds: string[],
   date: Date,
   type: "active" | "inactive"
-): Promise<UserBuyedNodeType[]> {
-  const activeNodes = await BuyedNodeModel.find({
+): Promise<UserPaymentType[]> {
+  const activeNodes = await PaymentModel.find({
     user: userId,
     node: { $in: nodesIds },
     expiration_date: { [type === "active" ? "$gte" : "$lt"]: date }
@@ -72,7 +72,7 @@ export async function getBuyedUserNodes(
     .select("_id name image price id_node key_node")
     .lean<{ node: NodeDBModelType }[]>();
 
-  return activeNodes.map<UserBuyedNodeType>(({ node }) => {
+  return activeNodes.map<UserPaymentType>(({ node }) => {
     return {
       _id: node._id,
       name: node.name,

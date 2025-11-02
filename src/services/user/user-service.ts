@@ -3,13 +3,13 @@ import bcrypt from "bcrypt";
 import { AuthMessages } from "../../constants/response-messages";
 import UserModel from "../../models/user/user-model";
 import NodeModel from "../../models/node/node-model";
-import BuyedNodeModel from "../../models/buyed-node/buyed-node-model";
+import PaymentModel from "../../models/payment/payment-model";
 import { NodePaymentCartType } from "../../types/node";
 import ApiError from "../api-error";
 import {
   calculateExpirationDateFromNodeCart,
-  getBuyedNodesInfo,
-  getBuyedUserNodes,
+  getPaymentInfo,
+  getUserPayments,
   getNodeById,
   getTotalAmountNodes
 } from "./user-service.helpers";
@@ -29,7 +29,7 @@ export async function topUpUserBalanceService(userId: string, amount: string) {
   };
 }
 
-export async function buyNodeService(userId: string, nodes: NodePaymentCartType[]) {
+export async function paymentNodeService(userId: string, nodes: NodePaymentCartType[]) {
   const nodeIds = nodes.map((node) => node._id);
 
   const nodesModel = (await NodeModel.find({ _id: { $in: nodeIds } })).flat();
@@ -50,7 +50,7 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
     const nodeId = node._id;
     const findNode = getNodeById(nodes, nodeId.toString());
 
-    const buyedNodeModel = await new BuyedNodeModel({
+    const paymentModel = await new PaymentModel({
       count: findNode.quantity,
       expiration_date: calculateExpirationDateFromNodeCart(findNode.months, now),
       purchase_date: now,
@@ -58,8 +58,8 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
       user: userModel._id
     });
 
-    buyedNodeModel.user = userModel._id;
-    await buyedNodeModel.save();
+    paymentModel.user = userModel._id;
+    await paymentModel.save();
   });
 
   if (userModel.balance !== undefined) {
@@ -75,20 +75,20 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
 
 export async function getActiveNodesService(userId: string) {
   const now = new Date();
-  const buyedNodesIds = await getBuyedNodesInfo(userId);
-  const activeNodes = await getBuyedUserNodes(userId, Array.from(buyedNodesIds.keys()), now, "active");
+  const paymentsIds = await getPaymentInfo(userId);
+  const activeNodes = await getUserPayments(userId, Array.from(paymentsIds.keys()), now, "active");
 
   if (!activeNodes.length) {
     return {
-      buyed_nodes: []
+      nodes: []
     };
   }
 
   return {
-    buyed_nodes: activeNodes.map((node) => {
+    nodes: activeNodes.map((node) => {
       return {
         ...node,
-        expiration_date: buyedNodesIds.get(node._id.toString())
+        expiration_date: paymentsIds.get(node._id.toString())
       };
     })
   };
@@ -96,17 +96,17 @@ export async function getActiveNodesService(userId: string) {
 
 export async function getExpiredNodesService(userId: string) {
   const now = new Date();
-  const buyedNodesIds = await getBuyedNodesInfo(userId);
-  const inactiveNodes = await getBuyedUserNodes(userId, Array.from(buyedNodesIds.keys()), now, "inactive");
+  const paymentsIds = await getPaymentInfo(userId);
+  const inactiveNodes = await getUserPayments(userId, Array.from(paymentsIds.keys()), now, "inactive");
 
   if (!inactiveNodes.length) {
     return {
-      buyed_nodes: []
+      nodes: []
     };
   }
 
   return {
-    buyed_nodes: inactiveNodes
+    nodes: inactiveNodes
   };
 }
 
