@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import authRouter from "./src/routes/auth";
 import nodesRouter from "./src/routes/node";
 import userRouter from "./src/routes/user";
+import paymentRouter from "./src/routes/payment";
 
 import databaseConnect from "./database";
 import { createSuperAdmin } from "./src/services/user/user-service";
@@ -44,6 +45,7 @@ import { createSuperAdmin } from "./src/services/user/user-service";
   server.use("/api", authRouter);
   server.use("/api", nodesRouter);
   server.use("/api", userRouter);
+  server.use("/api", paymentRouter);
 
   try {
     databaseConnect(process.env.MONGO_URL)

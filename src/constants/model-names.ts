@@ -3,5 +3,6 @@ export const DB_MODEL_NAME = {
   post: "Post",
   node: "Node",
   nodeDescription: "NodeDescription",
-  payment: "Payment"
+  payment: "Payment",
+  buyedNode: "BuyedNode"
 } as const;

@@ -2,7 +2,7 @@ import { NodeDBModelType } from "../node/node-model-type";
 import { UserDBModelType } from "../user/user-model-type";
 import { Document, ObjectId } from "mongoose";
 
-export type PaymentDBModelType = {
+export type BuyedNodeDBModelType = {
   count: number;
   expiration_date: Date;
   purchase_date: Date;

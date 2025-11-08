@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { UserLoginParams } from "../types/user";
+import { UserLoginParams } from "../models/user/user-model-type";
 import { AuthValidation } from "../constants/validation-messages";
 
 const studentRegistrationSchema = Joi.object<UserLoginParams>({
