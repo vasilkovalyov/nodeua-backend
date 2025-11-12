@@ -1,32 +1,63 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 
 import ApiError from "../services/api-error";
 import { validateToken, generateTokens } from "../services/token/token-service";
 import { loginService, registrationService, profileService } from "../services/auth";
 import status from "../utils/status";
 import { AuthMessages } from "../constants/response-messages";
+import { COOKIES_KEYS } from "../constants/cookies";
+import { RequestWithAuthUserType } from "../types/request";
 
 export async function loginController(req: Request, res: Response) {
   try {
-    const response = await loginService(req.body);
-    if (response) {
-      res.cookie("refreshToken", response.refreshToken, {
+    const loginResult = await loginService(req.body);
+    if (loginResult) {
+      res.cookie(COOKIES_KEYS.refreshToken, loginResult.refreshToken, {
         domain: process.env.DOMAIN,
         path: "/",
-        secure: true
+        secure: true,
+        httpOnly: true,
+        sameSite: "none"
       });
-      res.cookie("token", response.accessToken, {
+      res.cookie(COOKIES_KEYS.accessToken, loginResult.accessToken, {
         domain: process.env.DOMAIN,
         path: "/",
-        secure: false
+        secure: true,
+        httpOnly: true,
+        sameSite: "none"
       });
     }
-    const { ...params } = response;
 
-    return res.status(status.SUCCESS).json(params);
+    const { _id, email } = loginResult;
+
+    res.status(status.SUCCESS).json({
+      _id,
+      email
+    });
   } catch (e) {
     if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
+    res.status(status.BAD_REQUEST).json({
+      message: e.message
+    });
+  }
+}
+
+export async function logoutController(req: Request, res: Response) {
+  try {
+    res.clearCookie(COOKIES_KEYS.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    });
+    res.clearCookie(COOKIES_KEYS.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    });
+    res.status(status.SUCCESS).json(true);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    res.status(status.BAD_REQUEST).json({
       message: e.message
     });
   }
@@ -44,10 +75,11 @@ export async function registrationController(req: Request, res: Response) {
   }
 }
 
-export async function profileController(req: Request, res: Response) {
+export const profileController: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const response = await profileService(id);
+    const reqWithAuthUser = req as RequestWithAuthUserType;
+    const userId = reqWithAuthUser.user.userId;
+    const response = await profileService(userId);
     return res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (!(e instanceof Error)) return;
@@ -55,11 +87,11 @@ export async function profileController(req: Request, res: Response) {
       message: e.message
     });
   }
-}
+};
 
 export async function refreshTokenController(req: Request, res: Response) {
   try {
-    const refreshToken = req.body.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) throw ApiError.BadRequestError(AuthMessages.problemWithToken);
 
@@ -75,15 +107,19 @@ export async function refreshTokenController(req: Request, res: Response) {
       throw new Error("Error token");
     }
 
-    res.cookie("refreshToken", tokensData.refreshToken, {
+    res.cookie(COOKIES_KEYS.refreshToken, tokensData.refreshToken, {
       domain: process.env.DOMAIN,
       path: "/",
-      secure: false
+      secure: true,
+      httpOnly: true,
+      sameSite: "none"
     });
-    res.cookie("token", tokensData.accessToken, {
+    res.cookie(COOKIES_KEYS.accessToken, tokensData.accessToken, {
       domain: process.env.DOMAIN,
       path: "/",
-      secure: false
+      secure: true,
+      httpOnly: true,
+      sameSite: "none"
     });
 
     return res.status(status.SUCCESS).json({

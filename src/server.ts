@@ -1,17 +1,22 @@
 import express, { Express } from "express";
+
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
 import dotenv from "dotenv";
+import passport from "passport";
 
-import authRouter from "./src/routes/auth";
-import nodesRouter from "./src/routes/node";
-import userRouter from "./src/routes/user";
-import paymentRouter from "./src/routes/payment";
+import authRouter from "./routes/auth";
+import nodesRouter from "./routes/node";
+import userRouter from "./routes/user";
+import paymentRouter from "./routes/payment";
+import googleAuthRouter from "./routes/google-auth";
 
-import databaseConnect from "./database";
-import { createSuperAdmin } from "./src/services/user/user-service";
+import databaseConnect from "./database/database";
+import { createSuperAdmin } from "./services/user/user-service";
+
+import { googleAuth } from "./services/passport";
 
 (async () => {
   const server: Express = express();
@@ -26,11 +31,14 @@ import { createSuperAdmin } from "./src/services/user/user-service";
   server.use(
     cors({
       credentials: true,
-      origin: [WEBSITE_URL]
+      origin: [WEBSITE_URL, "http://localhost:3000"]
     })
   );
 
   createSuperAdmin();
+  googleAuth();
+
+  server.use(passport.initialize());
   server.use(express.urlencoded({ extended: true }));
   server.use(compression());
   server.use(cookieParser());
@@ -46,6 +54,7 @@ import { createSuperAdmin } from "./src/services/user/user-service";
   server.use("/api", nodesRouter);
   server.use("/api", userRouter);
   server.use("/api", paymentRouter);
+  server.use("/api", googleAuthRouter);
 
   try {
     databaseConnect(process.env.MONGO_URL)

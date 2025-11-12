@@ -4,6 +4,7 @@
     "moduleResolution": "nodenext",
     "outDir": "./build",
     "baseUrl": "src",
+    "rootDir": "src",
     "noEmit": false,
     "isolatedModules": true,
     "target": "ES6",
@@ -30,17 +31,6 @@
     "noImplicitThis": true,
     "strictBindCallApply": true
   },
-  "include": [
-    "./*",
-    "src/constants",
-    "src/controllers",
-    "src/middlewares",
-    "src/models",
-    "src/routes",
-    "src/services",
-    "src/types",
-    "src/utils",
-    "src/validations"
-  ],
+  "include": ["src"],
   "exclude": ["node_modules", "build"]
 }

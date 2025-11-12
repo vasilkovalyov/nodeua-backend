@@ -1,31 +1,34 @@
-import { Response, NextFunction } from "express";
+import { RequestHandler, Request, Response, NextFunction } from "express";
 import { validateToken } from "../services/token/token-service";
-import { TokenDataType, RequestWithAuthUserType } from "../types/token";
+import { UserMiddlewareAuthParams } from "../types/request";
 import status from "../utils/status";
 import { AuthMessages } from "../constants/response-messages";
 
-export default async function (req: RequestWithAuthUserType, res: Response, next: NextFunction) {
+const isAuthUserMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const headerToken = req.headers.authorization;
-
-    if (!headerToken) {
-      return res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
+    const accessToken = req.cookies.token;
+    if (!accessToken) {
+      res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
+      return;
     }
-    const token = headerToken.split("Bearer ")[1];
-    const userData = await validateToken(token);
+
+    const userData = await validateToken(accessToken);
+
     if (!userData) {
-      return res.status(status.BAD_REQUEST).json({ message: AuthMessages.destroyedToken });
+      res.status(status.BAD_REQUEST).json({ message: AuthMessages.destroyedToken });
+      return;
     }
 
-    const tokenData: TokenDataType = {
-      userId: userData.userId,
-      exp: userData.exp
+    const tokenData: UserMiddlewareAuthParams = {
+      userId: userData.userId
     };
 
     req.user = tokenData;
-    return next();
-  } catch (err) {
-    console.log(err);
-    return res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
+
+    next();
+  } catch {
+    res.status(status.UNAUTHORIZED).json({ message: AuthMessages.destroyedToken });
   }
-}
+};
+
+export default isAuthUserMiddleware;

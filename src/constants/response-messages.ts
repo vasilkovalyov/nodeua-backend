@@ -12,5 +12,6 @@ export enum AuthMessages {
   problemWithToken = "Problem with token",
   nodeInfoNotExist = "Node info not exist",
   nodeNotFound = "Node not found",
-  invalidSignature = "Invalid signature"
+  invalidSignature = "Invalid signature",
+  googleAuthError = "Google auth error"
 }

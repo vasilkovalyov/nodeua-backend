@@ -1,15 +1,14 @@
-import { Response, NextFunction } from "express";
+import { RequestHandler, Request, Response, NextFunction } from "express";
 
 import status from "../utils/status";
 import { AuthMessages } from "../constants/response-messages";
-import { RequestWithAuthUserType } from "../types/token";
+import { RequestWithAuthUserType } from "../types/request";
 import userModel from "../models/user/user-model";
 
-export default async function (req: RequestWithAuthUserType, res: Response, next: NextFunction) {
+const isAdminRoleMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.userId;
-
-    const isAdminUser = await userModel.findById(userId);
+    const reqWithAuthUser = req as RequestWithAuthUserType;
+    const isAdminUser = await userModel.findById(reqWithAuthUser.user.userId);
 
     if (isAdminUser?.role !== "admin") {
       return res.status(status.FORBIDDEN).json({ message: AuthMessages.userNotAdmin });
@@ -17,7 +16,9 @@ export default async function (req: RequestWithAuthUserType, res: Response, next
 
     return next();
   } catch (err) {
-    console.log(err);
-    return res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
+    // return res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
+    next(err);
   }
-}
+};
+
+export default isAdminRoleMiddleware;

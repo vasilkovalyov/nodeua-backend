@@ -1,6 +1,7 @@
 import express from "express";
 import {
   loginController,
+  logoutController,
   refreshTokenController,
   registrationController,
   profileController
@@ -11,8 +12,9 @@ import authMiddleware from "../middlewares/auth";
 const router = express.Router();
 
 router.post("/auth/login", loginController);
+router.post("/auth/logout", logoutController);
 router.post("/auth/refresh-token", refreshTokenController);
 router.post("/auth/registration", registrationController);
-router.get("/auth/profiles/:id", authMiddleware, profileController);
+router.get("/auth/profile", authMiddleware, profileController);
 
 export default router;

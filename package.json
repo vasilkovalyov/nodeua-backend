@@ -15,8 +15,8 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec ts-node ./server.ts",
-    "build": "tsc",
+    "dev": "nodemon --watch './**/*.ts' --exec ts-node ./src/server.ts",
+    "build": "npx tsc",
     "start": "NODE_ENV=production node build/server.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -37,7 +37,9 @@
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.0",
     "nodemailer": "^7.0.6",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -46,6 +48,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.6.2",
     "@types/nodemailer": "^7.0.2",
+    "@types/passport": "^1.0.17",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
     "eslint": "^9.36.0",

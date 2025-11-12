@@ -1,47 +1,27 @@
-import { Response } from "express";
+import { RequestHandler, Response, Request } from "express";
 import status from "../utils/status";
 import { buyNodeService, getActiveNodesService, getExpiredNodesService } from "../services/user/user-service";
-import { RequestWithAuthUserType } from "../types/token";
-import { AuthMessages } from "../constants/response-messages";
-import ApiError from "../services/api-error";
+import { RequestWithAuthUserType } from "../types/request";
 
-export async function paymentNodeController(req: RequestWithAuthUserType, res: Response) {
+export const paymentNodeController: RequestHandler = async (req: Request, res: Response) => {
   try {
+    const reqWithAuthUser = req as RequestWithAuthUserType;
     const { nodes } = req.body;
-    if (!req.user?.userId) {
-      throw ApiError.BadRequestError(AuthMessages.userNotFound);
-    }
-    const response = await buyNodeService(req.user.userId, nodes);
-    return res.status(status.SUCCESS).json(response);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
 
-export async function getActiveNodesController(req: RequestWithAuthUserType, res: Response) {
-  try {
-    if (!req.user?.userId) {
-      throw ApiError.BadRequestError(AuthMessages.userNotFound);
-    }
-    const response = await getActiveNodesService(req.user.userId);
-    return res.status(status.SUCCESS).json(response);
+    const response = await buyNodeService(reqWithAuthUser.user.userId, nodes);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
+    res.status(status.BAD_REQUEST).json({
       message: e.message
     });
   }
-}
+};
 
-export async function getExpiredNodesController(req: RequestWithAuthUserType, res: Response) {
+export const getActiveNodesController: RequestHandler = async (req: Request, res: Response) => {
   try {
-    if (!req.user?.userId) {
-      throw ApiError.BadRequestError(AuthMessages.userNotFound);
-    }
-    const response = await getExpiredNodesService(req.user.userId);
+    const reqWithAuthUser = req as RequestWithAuthUserType;
+    const response = await getActiveNodesService(reqWithAuthUser.user.userId);
     return res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (!(e instanceof Error)) return;
@@ -49,4 +29,17 @@ export async function getExpiredNodesController(req: RequestWithAuthUserType, re
       message: e.message
     });
   }
-}
+};
+
+export const getExpiredNodesController: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reqWithAuthUser = req as RequestWithAuthUserType;
+    const response = await getExpiredNodesService(reqWithAuthUser.user.userId);
+    return res.status(status.SUCCESS).json(response);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    return res.status(status.BAD_REQUEST).json({
+      message: e.message
+    });
+  }
+};

@@ -4,7 +4,7 @@ import { DB_MODEL_NAME } from "../../constants/model-names";
 
 export const UserSchema = new Schema<UserDBModelType>({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String },
   role: {
     type: String,
     enum: ["user", "admin"],
