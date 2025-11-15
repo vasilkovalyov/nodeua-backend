@@ -69,12 +69,15 @@ export async function nodeController(req: Request, res: Response) {
     const { id } = req.params;
     const node = await getNodeService(id);
 
+    if (node === null) {
+      return res.status(status.BAD_REQUEST).json(null);
+    }
+
     return res.status(status.SUCCESS).json(node);
   } catch (e) {
-    if (!(e instanceof ApiError)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
+    const message = e instanceof Error ? e.message : "Unknown server error";
+
+    return res.status(status.BAD_REQUEST).json(message);
   }
 }
 
