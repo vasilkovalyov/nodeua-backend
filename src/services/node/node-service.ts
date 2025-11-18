@@ -5,12 +5,20 @@ import { getNodeServicesFormatedMaxDuration } from "./node-service.helpers";
 import { CreateNodeProps, NodeType, UpdateNodeProps } from "../../models/node/node-model-type";
 
 export async function getAllNodesService() {
-  const isActiveNodes = await NodeModel.find({ is_active: true, is_soldout: false }).lean();
-  const isSoldoutNodes = await NodeModel.find({ is_soldout: true }).lean();
+  const now = new Date();
+  const activeNodes = await NodeModel.find({ expiration_date: { $gte: now } }).lean();
+  const expiredNodes = await NodeModel.find({ expiration_date: { $lt: now } }).lean();
 
   return {
-    active: getNodeServicesFormatedMaxDuration(isActiveNodes),
-    soldout: getNodeServicesFormatedMaxDuration(isSoldoutNodes)
+    active: getNodeServicesFormatedMaxDuration(activeNodes),
+    expired: getNodeServicesFormatedMaxDuration(
+      expiredNodes.map((node) => {
+        return {
+          ...node,
+          is_expired: true
+        };
+      })
+    )
   };
 }
 
