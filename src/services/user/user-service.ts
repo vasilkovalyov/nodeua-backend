@@ -9,7 +9,6 @@ import ApiError from "../api-error";
 import {
   calculateExpirationDateFromNodeCart,
   getBuyedNodesInfo,
-  getBuyedUserNodes,
   getNodeById,
   getTotalAmountNodes
 } from "./user-service.helpers";
@@ -35,16 +34,18 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
     const nodeId = node._id;
     const findNode = getNodeById(nodes, nodeId.toString());
 
-    const buyedNodeModel = await new BuyedNodeModel({
-      count: findNode.quantity,
-      expiration_date: calculateExpirationDateFromNodeCart(findNode.months, now),
-      purchase_date: now,
-      node: nodeId,
-      user: userModel._id
-    });
+    Array.from(Array(findNode.quantity).keys()).forEach(async () => {
+      const buyedNodeModel = await new BuyedNodeModel({
+        count: findNode.quantity,
+        expiration_date: calculateExpirationDateFromNodeCart(findNode.months, now),
+        purchase_date: now,
+        node: nodeId,
+        user: userModel._id
+      });
 
-    buyedNodeModel.user = userModel._id;
-    await buyedNodeModel.save();
+      buyedNodeModel.user = userModel._id;
+      await buyedNodeModel.save();
+    });
   });
 
   if (userModel.balance !== undefined) {
@@ -54,44 +55,37 @@ export async function buyNodeService(userId: string, nodes: NodePaymentCartType[
   await userModel.save();
 
   return {
-    balance: userModel.balance
+    balance: nodes
   };
 }
 
 export async function getActiveNodesService(userId: string) {
   const now = new Date();
-  const buyedNodesIds = await getBuyedNodesInfo(userId);
-  const activeNodes = await getBuyedUserNodes(userId, Array.from(buyedNodesIds.keys()), now, "active");
+  const nodes = await getBuyedNodesInfo(userId, now, "active");
 
-  if (!activeNodes.length) {
+  if (!nodes.length) {
     return {
       nodes: []
     };
   }
 
   return {
-    nodes: activeNodes.map((node) => {
-      return {
-        ...node,
-        expiration_date: buyedNodesIds.get(node._id.toString())
-      };
-    })
+    nodes: nodes
   };
 }
 
 export async function getExpiredNodesService(userId: string) {
   const now = new Date();
-  const buyedNodesIds = await getBuyedNodesInfo(userId);
-  const inactiveNodes = await getBuyedUserNodes(userId, Array.from(buyedNodesIds.keys()), now, "inactive");
+  const nodes = await getBuyedNodesInfo(userId, now, "inactive");
 
-  if (!inactiveNodes.length) {
+  if (!nodes.length) {
     return {
       nodes: []
     };
   }
 
   return {
-    nodes: inactiveNodes
+    nodes: nodes
   };
 }
 

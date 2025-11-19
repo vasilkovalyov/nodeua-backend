@@ -15,10 +15,10 @@ const router = express.Router();
 
 router.post("/create-node", authMiddleware, isAdminRole, nodeCreateController);
 router.put("/edit-node", authMiddleware, isAdminRole, nodeUpdateController);
-
-router.get("/nodes/", nodesController);
 router.get("/admin-nodes/", authMiddleware, isAdminRole, adminNodesController);
 router.get("/admin-node/:id", authMiddleware, isAdminRole, adminNodeController);
+
+router.get("/nodes/", nodesController);
 router.get("/nodes-cart/", authMiddleware, nodesCartController);
 router.get("/node/:id", nodeController);
 

@@ -1,6 +1,7 @@
 import BuyedNodeModel from "../../models/buyed-node/buyed-node-model";
 import { NodePaymentCartType } from "../../types/node";
 import { NodeDBModelType } from "../../models/node/node-model-type";
+import { GetBuyedNodesInfoFromDBProps } from "./user-service.type";
 
 export function getTotalAmountNodes(nodesModelFromDb: NodeDBModelType[], nodesPayload: NodePaymentCartType[]): number {
   const nodesMap: Map<string, Omit<NodePaymentCartType, "_id">> = new Map();
@@ -35,51 +36,17 @@ export function calculateExpirationDateFromNodeCart(months: number, today: Date)
   return monthsLater;
 }
 
-export async function getBuyedNodesInfo(userId: string): Promise<Map<string, string>> {
-  const buyedNodes = await BuyedNodeModel.find({
-    user: userId
-  }).select("node expiration_date");
-  const nodesCollection = new Map();
-
-  for (const node of buyedNodes) {
-    nodesCollection.set(node.node.toString(), node.expiration_date);
-  }
-
-  return nodesCollection;
-}
-
-type UserBuyedNodeType = {
-  _id: string;
-  name: string;
-  image: string;
-  price: number;
-  id_node: string;
-  key_node: string;
-};
-
-export async function getBuyedUserNodes(
+export async function getBuyedNodesInfo(
   userId: string,
-  nodesIds: string[],
   date: Date,
   type: "active" | "inactive"
-): Promise<UserBuyedNodeType[]> {
-  const activeNodes = await BuyedNodeModel.find({
+): Promise<GetBuyedNodesInfoFromDBProps[]> {
+  const buyedNodes = await BuyedNodeModel.find<GetBuyedNodesInfoFromDBProps>({
     user: userId,
-    node: { $in: nodesIds },
     expiration_date: { [type === "active" ? "$gte" : "$lt"]: date }
   })
-    .populate<{ node: NodeDBModelType }>("node")
-    .select("_id name image price id_node key_node")
-    .lean<{ node: NodeDBModelType }[]>();
+    .select("node user expiration_date")
+    .populate([{ path: "node", select: "_id image name price ip_node id_node key_node expiration_date" }]);
 
-  return activeNodes.map<UserBuyedNodeType>(({ node }) => {
-    return {
-      _id: node._id,
-      name: node.name,
-      image: node.image,
-      price: node.price,
-      id_node: node.id_node,
-      key_node: node.key_node
-    };
-  });
+  return buyedNodes;
 }
