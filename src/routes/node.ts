@@ -7,7 +7,9 @@ import {
   nodeUpdateController,
   adminNodesController,
   adminUsersController,
-  adminNodeController
+  adminNodeController,
+  adminBuyedNodesController,
+  adminBuyedNodeController
 } from "../controllers/node";
 import authMiddleware from "../middlewares/auth";
 import isAdminRole from "../middlewares/is-admin-role";
@@ -19,6 +21,8 @@ router.put("/edit-node", authMiddleware, isAdminRole, nodeUpdateController);
 router.get("/admin-nodes/", authMiddleware, isAdminRole, adminNodesController);
 router.get("/admin-users/", authMiddleware, isAdminRole, adminUsersController);
 router.get("/admin-node/:id", authMiddleware, isAdminRole, adminNodeController);
+router.get("/admin-buyed-nodes", authMiddleware, isAdminRole, adminBuyedNodesController);
+router.get("/admin-buyed-nodes/:id", authMiddleware, isAdminRole, adminBuyedNodeController);
 
 router.get("/nodes/", nodesController);
 router.get("/nodes-cart/", authMiddleware, nodesCartController);

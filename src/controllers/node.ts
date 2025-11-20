@@ -7,7 +7,9 @@ import {
   createNodeService,
   updateNodeService,
   getAllNodesForAdminService,
-  getNodeForAdminService
+  getNodeForAdminService,
+  getBuyedNodesForAdminService,
+  getBuyedNodeForAdminService
 } from "../services/node/node-service";
 import status from "../utils/status";
 
@@ -111,6 +113,31 @@ export async function nodeUpdateController(req: Request, res: Response) {
 export async function adminUsersController(req: Request, res: Response) {
   try {
     const nodes = await getAllUsersForAdmin();
+    return res.status(status.SUCCESS).json(nodes);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    return res.status(status.BAD_REQUEST).json({
+      message: e.message
+    });
+  }
+}
+
+export async function adminBuyedNodesController(req: Request, res: Response) {
+  try {
+    const nodes = await getBuyedNodesForAdminService();
+    return res.status(status.SUCCESS).json(nodes);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
+    return res.status(status.BAD_REQUEST).json({
+      message: e.message
+    });
+  }
+}
+
+export async function adminBuyedNodeController(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const nodes = await getBuyedNodeForAdminService(id);
     return res.status(status.SUCCESS).json(nodes);
   } catch (e) {
     if (!(e instanceof Error)) return;

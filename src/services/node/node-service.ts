@@ -1,5 +1,6 @@
 import NodeModel from "../../models/node/node-model";
 import NodeDescriptionModel from "../../models/node-description/node-description-model";
+import BuyedNodeModel from "../../models/buyed-node/buyed-node-model";
 import { adaperNodeToNodeModel, adaperNodeToNodeDescriptionModel } from "../../adapters/node";
 import { getNodeServicesFormatedMaxDuration } from "./node-service.helpers";
 import { CreateNodeProps, NodeType, UpdateNodeProps } from "../../models/node/node-model-type";
@@ -82,5 +83,26 @@ export async function updateNodeService(node: UpdateNodeProps) {
 
   return {
     message: "Node has been updates"
+  };
+}
+
+export async function getBuyedNodesForAdminService() {
+  const nodes = await BuyedNodeModel.find()
+    .select("_id purchase_date expiration_date")
+    .populate([{ path: "node", select: "_id image name price ip_node id_node key_node" }])
+    .populate([{ path: "user", select: "_id email" }]);
+
+  return {
+    nodes: nodes
+  };
+}
+
+export async function getBuyedNodeForAdminService(id: string) {
+  const node = await BuyedNodeModel.findById(id)
+    .populate([{ path: "node" }])
+    .populate([{ path: "user", select: "_id email" }]);
+
+  return {
+    node: node
   };
 }
