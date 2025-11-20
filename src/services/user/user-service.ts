@@ -112,3 +112,17 @@ export async function createSuperAdmin() {
 
   await superAdmin.save();
 }
+
+export async function getAllUsersForAdmin() {
+  const users = await UserModel.find().select("email _id");
+
+  if (!users.length) {
+    return {
+      users: []
+    };
+  }
+
+  return {
+    users: users
+  };
+}

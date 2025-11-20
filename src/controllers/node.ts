@@ -13,6 +13,7 @@ import status from "../utils/status";
 
 import ApiError from "../services/api-error";
 import { CreateNodeProps, UpdateNodeProps } from "../models/node/node-model-type";
+import { getAllUsersForAdmin } from "../services/user/user-service";
 
 export async function nodesController(req: Request, res: Response) {
   try {
@@ -101,6 +102,18 @@ export async function nodeUpdateController(req: Request, res: Response) {
     return res.status(status.SUCCESS).json(node);
   } catch (e) {
     if (!(e instanceof ApiError)) return;
+    return res.status(status.BAD_REQUEST).json({
+      message: e.message
+    });
+  }
+}
+
+export async function adminUsersController(req: Request, res: Response) {
+  try {
+    const nodes = await getAllUsersForAdmin();
+    return res.status(status.SUCCESS).json(nodes);
+  } catch (e) {
+    if (!(e instanceof Error)) return;
     return res.status(status.BAD_REQUEST).json({
       message: e.message
     });
