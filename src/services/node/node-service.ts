@@ -4,6 +4,7 @@ import BuyedNodeModel from "../../models/buyed-node/buyed-node-model";
 import { adaperNodeToNodeModel, adaperNodeToNodeDescriptionModel } from "../../adapters/node";
 import { getNodeServicesFormatedMaxDuration } from "./node-service.helpers";
 import { CreateNodeProps, NodeType, UpdateNodeProps } from "../../models/node/node-model-type";
+import { DB_MODEL_NAME } from "../../constants/model-names";
 
 export async function getAllNodesService() {
   const now = new Date();
@@ -87,10 +88,50 @@ export async function updateNodeService(node: UpdateNodeProps) {
 }
 
 export async function getBuyedNodesForAdminService() {
-  const nodes = await BuyedNodeModel.find()
-    .select("_id purchase_date expiration_date")
-    .populate([{ path: "node", select: "_id image name price ip_node id_node key_node" }])
-    .populate([{ path: "user", select: "_id email" }]);
+  const now = new Date();
+
+  const nodes = await BuyedNodeModel.aggregate([
+    {
+      $lookup: {
+        from: "nodes",
+        localField: "node",
+        foreignField: "_id",
+        as: DB_MODEL_NAME.node
+      }
+    },
+    { $unwind: { path: `$${DB_MODEL_NAME.node}`, preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: DB_MODEL_NAME.user
+      }
+    },
+    { $unwind: { path: `$${DB_MODEL_NAME.user}`, preserveNullAndEmptyArrays: true } },
+    {
+      $addFields: {
+        is_active: { $gt: ["$expiration_date", now] }
+      }
+    },
+    {
+      $project: {
+        [`${DB_MODEL_NAME.user}._id`]: 1,
+        [`${DB_MODEL_NAME.user}.email`]: 1,
+        [`${DB_MODEL_NAME.node}._id`]: 1,
+        [`${DB_MODEL_NAME.node}.image`]: 1,
+        [`${DB_MODEL_NAME.node}.name`]: 1,
+        [`${DB_MODEL_NAME.node}.price`]: 1,
+        [`${DB_MODEL_NAME.node}.ip_node`]: 1,
+        [`${DB_MODEL_NAME.node}.id_node`]: 1,
+        [`${DB_MODEL_NAME.node}.key_node`]: 1,
+        _id: 1,
+        purchase_date: 1,
+        expiration_date: 1,
+        is_active: 1
+      }
+    }
+  ]);
 
   return {
     nodes: nodes
@@ -98,11 +139,23 @@ export async function getBuyedNodesForAdminService() {
 }
 
 export async function getBuyedNodeForAdminService(id: string) {
+  const now = new Date();
+
   const node = await BuyedNodeModel.findById(id)
     .populate([{ path: "node" }])
-    .populate([{ path: "user", select: "_id email" }]);
+    .populate([{ path: "user", select: "_id email" }])
+    .lean();
+
+  if (!node) {
+    return {
+      message: "node not found"
+    };
+  }
 
   return {
-    node: node
+    node: {
+      ...node,
+      is_active: node.expiration_date > now
+    }
   };
 }
