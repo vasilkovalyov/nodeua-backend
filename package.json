@@ -15,20 +15,18 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec ts-node ./src/server.ts",
+    "dev": "ts-node-dev --respawn src/server.ts",
     "build": "npx tsc",
     "start": "NODE_ENV=production node build/server.js",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky",
-    "postinstall": "husky install"
+    "lint": "eslint . --ext .ts,.mts,.js,.mjs",
+    "lint:fix": "eslint . --ext .ts,.mts,.js,.mjs --fix",
+    "prettier": "prettier --write .",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,ts,json,md}": [
+    "*.{js,ts,json,mts,mjs}": [
       "prettier --write .",
-      "eslint . --ext .ts"
+      "eslint . --ext .ts,.mts,.js,.mjs"
     ]
   },
   "_moduleAliases": {
@@ -73,6 +71,8 @@
     "@typescript-eslint/parser": "^8.45.0",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
@@ -80,7 +80,7 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.45.0"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }

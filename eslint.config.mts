@@ -1,44 +1,32 @@
-import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import tsParser from "@typescript-eslint/parser";
 import { defineConfig } from "eslint/config";
-import prettierConfig from "eslint-config-prettier";
+// import prettierConfig from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";
 
-export default defineConfig([
-  {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    plugins: { js, prettier: prettierPlugin },
-    extends: ["js/recommended", prettierConfig],
-    languageOptions: {
+export default defineConfig({
+  files: ["src/**/*.{ts,mts,js,json}"],
+  ignores: ["**/node_modules/**", "**/build/**", "**/.git/**"],
+  languageOptions: {
+    parser: tsParser,
+    parserOptions: {
+      project: "./tsconfig.json",
       ecmaVersion: "latest",
-      sourceType: "module",
-      globals: globals.node
-    },
-    ignores: ["build", "node_modules"],
-    settings: {
-      "import/resolver": {
-        alias: {
-          map: [
-            ["@adapters", "./src/adapters"],
-            ["@constants", "./src/constants"],
-            ["@controllers", "./src/controllers"],
-            ["@middlewares", "./src/middlewares"],
-            ["@models", "./src/models"],
-            ["@services", "./src/services"],
-            ["@types", "./src/types"],
-            ["@utils", "./src/utils"],
-            ["@validations", "./src/validations"]
-          ],
-          extensions: [".js", ".ts", ".json"]
-        }
-      }
-    },
-    rules: {
-      "prettier/prettier": "error",
-      "no-unused-vars": "warn",
-      "no-console": "off"
+      tsconfigRootDir: process.cwd(),
+      sourceType: "module"
     }
   },
-  tseslint.configs.recommended
-]);
+  plugins: {
+    prettier: prettierPlugin
+  },
+  settings: {
+    "import/resolver": {
+      typescript: {
+        project: "./tsconfig.json"
+      }
+    }
+  },
+  rules: {
+    "prettier/prettier": "error"
+    // "no-console": "warn"
+  }
+});

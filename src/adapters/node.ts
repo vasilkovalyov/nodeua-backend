@@ -1,4 +1,4 @@
-import { CreateNodeProps, NodeType } from "models/node/node-model-type";
+import { CreateNodeProps, NodeType } from "../models/node/node-model-type";
 import { getDaysCountBetweenDates } from "../utils/dates";
 import { NodeDescriptionType } from "../models/node-description/node-description-model-type";
 

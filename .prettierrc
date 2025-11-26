@@ -1,7 +1,8 @@
 {
   "semi": true,
-  "endOfLine": "auto",
+  "endOfLine": "lf",
   "printWidth": 120,
+  "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "none",
   "useTabs": false,
