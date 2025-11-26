@@ -1,4 +1,3 @@
-import "module-alias/register";
 import databaseConnect from "./database/database";
 
 import app from "./app";

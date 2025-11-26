@@ -7,6 +7,7 @@ import { AuthMessages } from "../constants/response-messages";
 const isAuthUserMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const accessToken = req.cookies.token;
+
     if (!accessToken) {
       res.status(status.UNAUTHORIZED).json({ message: AuthMessages.unauthorized });
       return;

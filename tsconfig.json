@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2024",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "outDir": "build",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "outDir": "./build",
     "baseUrl": "src",
     "rootDir": "src",
+    "lib": ["ES2020"],
     "noEmit": false,
     "isolatedModules": true,
     "declaration": true,
@@ -15,7 +16,6 @@
     "noImplicitReturns": true,
     "removeComments": true,
     "sourceMap": false,
-    // "lib": ["ES2020"],
     "types": ["node"],
     "allowJs": true,
     "skipLibCheck": true,

@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 import {
   adminNodeCreateController,
   adminNodeUpdateController,
@@ -12,17 +12,17 @@ import {
 import authMiddleware from "../middlewares/auth";
 import isAdminRole from "../middlewares/is-admin-role";
 
-const router = express.Router();
+const router = Router();
 
 router.use(authMiddleware);
 router.use(isAdminRole);
 
-router.post("/admin/create-node", adminNodeCreateController);
-router.put("/admin/edit-node", adminNodeUpdateController);
-router.get("/admin-nodes/", adminNodesController);
-router.get("/admin-users/", adminUsersController);
-router.get("/admin-node/:id", adminNodeController);
-router.get("/admin-buyed-nodes", adminBuyedNodesController);
-router.get("/admin-buyed-nodes/:id", adminBuyedNodeController);
+router.post("/create-node", adminNodeCreateController);
+router.put("/edit-node", adminNodeUpdateController);
+router.get("/nodes", adminNodesController);
+router.get("/users", adminUsersController);
+router.get("/node/:id", adminNodeController);
+router.get("/buyed-nodes", adminBuyedNodesController);
+router.get("/buyed-nodes/:id", adminBuyedNodeController);
 
 export default router;

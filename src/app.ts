@@ -50,9 +50,9 @@ app.get("/", (_, res) => {
 
 app.use("/api", authRouter);
 app.use("/api", nodeRouter);
-app.use("/api", userRouter);
+app.use("/api/user", userRouter);
 app.use("/api", paymentRouter);
 app.use("/api", googleAuthRouter);
-app.use("/api", adminNodeRouter);
+app.use("/api/admin", adminNodeRouter);
 
 export default app;
