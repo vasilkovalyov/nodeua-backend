@@ -48,9 +48,3 @@ export async function registrationService({ email, password }: UserRegistrationP
     message: AuthMessages.userCreated
   };
 }
-
-export async function profileService(id: string) {
-  const response = await UserModel.findById(id);
-
-  return response;
-}
