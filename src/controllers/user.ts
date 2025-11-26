@@ -1,7 +1,32 @@
 import { RequestHandler, Response, Request } from "express";
 import status from "../utils/status";
-import { buyNodeService, getActiveNodesService, getExpiredNodesService } from "../services/user/user-service";
+import {
+  buyNodeService,
+  getActiveNodesService,
+  getExpiredNodesService,
+  profileService
+} from "../services/user/user-service";
 import { RequestWithAuthUserType } from "../types/request";
+import { AuthMessages } from "../constants/response-messages";
+
+export const profileController: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const reqWithAuthUser = req as RequestWithAuthUserType;
+    const userId = reqWithAuthUser.user.userId;
+    const response = await profileService(userId);
+    res.status(status.SUCCESS).json(response);
+  } catch (e) {
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
+    });
+  }
+};
 
 export const paymentNodeController: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -11,9 +36,14 @@ export const paymentNodeController: RequestHandler = async (req: Request, res: R
     const response = await buyNodeService(reqWithAuthUser.user.userId, nodes);
     res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
     res.status(status.BAD_REQUEST).json({
-      message: e.message
+      message: AuthMessages.errorResponse
     });
   }
 };
@@ -22,11 +52,16 @@ export const getActiveNodesController: RequestHandler = async (req: Request, res
   try {
     const reqWithAuthUser = req as RequestWithAuthUserType;
     const response = await getActiveNodesService(reqWithAuthUser.user.userId);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 };
@@ -35,11 +70,15 @@ export const getExpiredNodesController: RequestHandler = async (req: Request, re
   try {
     const reqWithAuthUser = req as RequestWithAuthUserType;
     const response = await getExpiredNodesService(reqWithAuthUser.user.userId);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 };

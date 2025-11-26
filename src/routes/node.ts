@@ -1,31 +1,11 @@
 import express from "express";
-import {
-  nodesController,
-  nodeController,
-  nodesCartController,
-  nodeCreateController,
-  nodeUpdateController,
-  adminNodesController,
-  adminUsersController,
-  adminNodeController,
-  adminBuyedNodesController,
-  adminBuyedNodeController
-} from "../controllers/node";
+import { getNodesController, getNodeByIdController, getNodesCartController } from "../controllers/node";
 import authMiddleware from "../middlewares/auth";
-import isAdminRole from "../middlewares/is-admin-role";
 
 const router = express.Router();
 
-router.post("/create-node", authMiddleware, isAdminRole, nodeCreateController);
-router.put("/edit-node", authMiddleware, isAdminRole, nodeUpdateController);
-router.get("/admin-nodes/", authMiddleware, isAdminRole, adminNodesController);
-router.get("/admin-users/", authMiddleware, isAdminRole, adminUsersController);
-router.get("/admin-node/:id", authMiddleware, isAdminRole, adminNodeController);
-router.get("/admin-buyed-nodes", authMiddleware, isAdminRole, adminBuyedNodesController);
-router.get("/admin-buyed-nodes/:id", authMiddleware, isAdminRole, adminBuyedNodeController);
-
-router.get("/nodes/", nodesController);
-router.get("/nodes-cart/", authMiddleware, nodesCartController);
-router.get("/node/:id", nodeController);
+router.get("/nodes/", getNodesController);
+router.get("/nodes-cart/", authMiddleware, getNodesCartController);
+router.get("/node/:id", getNodeByIdController);
 
 export default router;

@@ -5,7 +5,9 @@ import { createInvoiceController, topUpBalanceAfterInvoiceController } from "../
 
 const router = express.Router();
 
-router.post("/create-invoice", authMiddleware, createInvoiceController);
-router.post("/top-up-balance", authMiddleware, topUpBalanceAfterInvoiceController);
+router.use(authMiddleware);
+
+router.post("/create-invoice", createInvoiceController);
+router.post("/top-up-balance", topUpBalanceAfterInvoiceController);
 
 export default router;

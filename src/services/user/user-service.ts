@@ -13,6 +13,12 @@ import {
   getTotalAmountNodes
 } from "./user-service.helpers";
 
+export async function profileService(id: string) {
+  const response = await UserModel.findById(id);
+
+  return response;
+}
+
 export async function buyNodeService(userId: string, nodes: NodePaymentCartType[]) {
   const nodeIds = nodes.map((node) => node._id);
 

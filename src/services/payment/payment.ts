@@ -34,28 +34,21 @@ export async function createPaymentService(props: CreatePaymentProps) {
     status: "waiting",
     payment_id: data?.id,
     amount: amount,
-    paymentUrl: data?.invoice_url,
+    paymentUrl: data?.payment_url,
     description: description || ""
   });
 
-  if (userModel.balance !== undefined) {
+  if (userModel.balance) {
     userModel.balance += parseFloat(amount);
+    userModel.save();
   }
-
   return data;
 }
 
 export async function topUpBalanceAfterInvoiceService(props: CreatePaymentResponseAfterSendInvoiceProps) {
-  const { order_id, actually_paid, payment_status } = props;
-  const userModel = await UserModel.findById(order_id);
-  if (!userModel) throw ApiError.BadRequestError(AuthMessages.userNotFound);
+  const { order_id, payment_status } = props;
 
-  if (payment_status === "confirmed" && userModel.balance !== undefined) {
-    userModel.balance += parseFloat(actually_paid);
-    await userModel.save();
+  if (payment_status === "confirmed") {
+    await PaymentModel.findOneAndUpdate({ user: order_id }, { $set: { status: "confirmed" } }, { new: true });
   }
-
-  return {
-    balance: userModel?.balance
-  };
 }

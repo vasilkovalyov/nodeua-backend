@@ -1,12 +1,11 @@
-import { Request, RequestHandler, Response } from "express";
+import { Request, Response } from "express";
 
+import status from "../utils/status";
 import ApiError from "../services/api-error";
 import { validateToken, generateTokens } from "../services/token/token-service";
-import { loginService, registrationService, profileService } from "../services/auth";
-import status from "../utils/status";
+import { loginService, registrationService } from "../services/auth";
 import { AuthMessages } from "../constants/response-messages";
 import { COOKIES_KEYS } from "../constants/cookies";
-import { RequestWithAuthUserType } from "../types/request";
 
 export async function loginController(req: Request, res: Response) {
   try {
@@ -35,9 +34,14 @@ export async function loginController(req: Request, res: Response) {
       email
     });
   } catch (e) {
-    if (!(e instanceof Error)) return;
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
     res.status(status.BAD_REQUEST).json({
-      message: e.message
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -56,9 +60,14 @@ export async function logoutController(req: Request, res: Response) {
     });
     res.status(status.SUCCESS).json(true);
   } catch (e) {
-    if (!(e instanceof Error)) return;
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
     res.status(status.BAD_REQUEST).json({
-      message: e.message
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -66,28 +75,19 @@ export async function logoutController(req: Request, res: Response) {
 export async function registrationController(req: Request, res: Response) {
   try {
     const response = await registrationService(req.body);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
-
-export const profileController: RequestHandler = async (req: Request, res: Response) => {
-  try {
-    const reqWithAuthUser = req as RequestWithAuthUserType;
-    const userId = reqWithAuthUser.user.userId;
-    const response = await profileService(userId);
-    return res.status(status.SUCCESS).json(response);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-};
 
 export async function refreshTokenController(req: Request, res: Response) {
   try {
@@ -122,13 +122,18 @@ export async function refreshTokenController(req: Request, res: Response) {
       sameSite: "none"
     });
 
-    return res.status(status.SUCCESS).json({
+    res.status(status.SUCCESS).json({
       accessToken: tokensData.accessToken
     });
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }

@@ -17,9 +17,14 @@ export async function createInvoiceController(req: Request, res: Response) {
     });
     res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
     res.status(status.BAD_REQUEST).json({
-      message: e.message
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -35,9 +40,14 @@ export async function topUpBalanceAfterInvoiceController(req: Request, res: Resp
     const response = await topUpBalanceAfterInvoiceService(req.body);
     res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
     res.status(status.BAD_REQUEST).json({
-      message: e.message
+      message: AuthMessages.errorResponse
     });
   }
 }

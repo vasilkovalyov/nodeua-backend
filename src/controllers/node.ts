@@ -1,148 +1,64 @@
 import { Request, Response } from "express";
 
-import {
-  getNodeService,
-  getAllNodesService,
-  getNodesForCart,
-  createNodeService,
-  updateNodeService,
-  getAllNodesForAdminService,
-  getNodeForAdminService,
-  getBuyedNodesForAdminService,
-  getBuyedNodeForAdminService
-} from "../services/node/node-service";
+import { getNodeService, getAllNodesService, getNodesForCart } from "../services/node/node-service";
 import status from "../utils/status";
 
-import ApiError from "../services/api-error";
-import { CreateNodeProps, UpdateNodeProps } from "../models/node/node-model-type";
-import { getAllUsersForAdmin } from "../services/user/user-service";
+import { AuthMessages } from "../constants/response-messages";
 
-export async function nodesController(req: Request, res: Response) {
+export async function getNodesController(req: Request, res: Response) {
   try {
     const nodes = await getAllNodesService();
-    return res.status(status.SUCCESS).json(nodes);
+    res.status(status.SUCCESS).json(nodes);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
 
-export async function adminNodesController(req: Request, res: Response) {
-  try {
-    const nodes = await getAllNodesForAdminService();
-    return res.status(status.SUCCESS).json(nodes);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
-
-export async function adminNodeController(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const nodes = await getNodeForAdminService(id);
-    return res.status(status.SUCCESS).json(nodes);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
-
-export async function nodesCartController(req: Request, res: Response) {
+export async function getNodesCartController(req: Request, res: Response) {
   try {
     const ids = req.query.ids as string;
     const nodes = await getNodesForCart(ids.split(","));
-    return res.status(status.SUCCESS).json(nodes);
+    res.status(status.SUCCESS).json(nodes);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
 
-export async function nodeController(req: Request, res: Response) {
+export async function getNodeByIdController(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const node = await getNodeService(id);
 
     if (node === null) {
-      return res.status(status.BAD_REQUEST).json(null);
+      res.status(status.BAD_REQUEST).json(null);
+    } else {
+      res.status(status.SUCCESS).json(node);
+    }
+  } catch (e) {
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
     }
 
-    return res.status(status.SUCCESS).json(node);
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Unknown server error";
-
-    return res.status(status.BAD_REQUEST).json(message);
-  }
-}
-
-export async function nodeCreateController(req: Request, res: Response) {
-  try {
-    const node = await createNodeService(req.body as unknown as CreateNodeProps);
-
-    return res.status(status.SUCCESS).json(node);
-  } catch (e) {
-    if (!(e instanceof ApiError)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
-
-export async function nodeUpdateController(req: Request, res: Response) {
-  try {
-    const node = await updateNodeService(req.body as unknown as UpdateNodeProps);
-
-    return res.status(status.SUCCESS).json(node);
-  } catch (e) {
-    if (!(e instanceof ApiError)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
-
-export async function adminUsersController(req: Request, res: Response) {
-  try {
-    const nodes = await getAllUsersForAdmin();
-    return res.status(status.SUCCESS).json(nodes);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
-
-export async function adminBuyedNodesController(req: Request, res: Response) {
-  try {
-    const nodes = await getBuyedNodesForAdminService();
-    return res.status(status.SUCCESS).json(nodes);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
-    });
-  }
-}
-
-export async function adminBuyedNodeController(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const nodes = await getBuyedNodeForAdminService(id);
-    return res.status(status.SUCCESS).json(nodes);
-  } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }

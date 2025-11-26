@@ -1,12 +1,20 @@
 import express from "express";
-import { paymentNodeController, getActiveNodesController, getExpiredNodesController } from "../controllers/user";
+import {
+  paymentNodeController,
+  getActiveNodesController,
+  getExpiredNodesController,
+  profileController
+} from "../controllers/user";
 
 import authMiddleware from "../middlewares/auth";
 
 const router = express.Router();
 
-router.put("/user/buy-node", authMiddleware, paymentNodeController);
-router.get("/user/active-nodes", authMiddleware, getActiveNodesController);
-router.get("/user/expired-nodes", authMiddleware, getExpiredNodesController);
+router.use(authMiddleware);
+
+router.get("/user/profile", profileController);
+router.put("/user/buy-node", paymentNodeController);
+router.get("/user/active-nodes", getActiveNodesController);
+router.get("/user/expired-nodes", getExpiredNodesController);
 
 export default router;

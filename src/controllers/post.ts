@@ -7,15 +7,21 @@ import {
   updatePostService,
   getPostService
 } from "../services/post";
+import { AuthMessages } from "../constants/response-messages";
 
 export async function createPostController(req: Request, res: Response) {
   try {
     const response = await createPostService(req.body);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -23,11 +29,16 @@ export async function createPostController(req: Request, res: Response) {
 export async function updatePostController(req: Request, res: Response) {
   try {
     const response = await updatePostService(req.body);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -37,11 +48,16 @@ export async function deletePostController(req: Request, res: Response) {
     const { id } = req.params;
 
     const response = await deletePostService(id);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -51,11 +67,16 @@ export async function getPostsController(req: Request, res: Response) {
     const { id } = req.params;
 
     const response = await getPostsService(id);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }
@@ -65,11 +86,16 @@ export async function getPostController(req: Request, res: Response) {
     const { id } = req.params;
 
     const response = await getPostService(id);
-    return res.status(status.SUCCESS).json(response);
+    res.status(status.SUCCESS).json(response);
   } catch (e) {
-    if (!(e instanceof Error)) return;
-    return res.status(status.BAD_REQUEST).json({
-      message: e.message
+    if (e instanceof Error) {
+      res.status(status.BAD_REQUEST).json({
+        message: e.message
+      });
+    }
+
+    res.status(status.BAD_REQUEST).json({
+      message: AuthMessages.errorResponse
     });
   }
 }

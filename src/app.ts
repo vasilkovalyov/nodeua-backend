@@ -8,7 +8,8 @@ import dotenv from "dotenv";
 import passport from "passport";
 
 import authRouter from "./routes/auth";
-import nodesRouter from "./routes/node";
+import nodeRouter from "./routes/node";
+import adminNodeRouter from "./routes/admin-node";
 import userRouter from "./routes/user";
 import paymentRouter from "./routes/payment";
 import googleAuthRouter from "./routes/google-auth";
@@ -48,9 +49,10 @@ app.get("/", (_, res) => {
 });
 
 app.use("/api", authRouter);
-app.use("/api", nodesRouter);
+app.use("/api", nodeRouter);
 app.use("/api", userRouter);
 app.use("/api", paymentRouter);
 app.use("/api", googleAuthRouter);
+app.use("/api", adminNodeRouter);
 
 export default app;
