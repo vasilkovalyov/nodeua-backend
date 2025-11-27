@@ -5,7 +5,7 @@ services:
     container_name: node-ua-prod-image
     env_file: .env
     build:
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
