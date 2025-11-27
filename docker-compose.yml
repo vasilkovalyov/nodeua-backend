@@ -3,6 +3,7 @@ version: "3.9"
 services:
   app:
     container_name: node-ua-prod-image
+    env_file: .env
     build:
       dockerfile: Dockerfile
     ports:
