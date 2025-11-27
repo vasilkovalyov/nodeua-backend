@@ -6,7 +6,7 @@ import app from "./app";
   const PORT = process.env.PORT || 8080;
 
   try {
-    databaseConnect(process.env.MONGO_URL)
+    databaseConnect(process.env.MONGO_URI)
       .then(() => {
         app.listen(PORT, () => console.log(`Server app working on port http://localhost:${PORT}`));
       })
