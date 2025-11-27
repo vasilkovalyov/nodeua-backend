@@ -18,7 +18,7 @@ export async function createNowPaymentInvoice<T>(props: InvoiceCreateProps): Pro
       order_id: order_id,
       price_amount: withPaymentFee(amount),
       order_description: description || "Order from NodeUA shop",
-      ipn_callback_url: `${process.env.BACKEND_API_URL}/api/ipn-payment`,
+      ipn_callback_url: `${process.env.DOMAIN}/api/ipn-payment`,
       pay_currency: BASE_PAYMENT_PAY_CURRENCY,
       price_currency: BASE_PAYMENT_PRICE_CURRENCY,
       success_url: `${process.env.WEBSITE_API_URL}/`,

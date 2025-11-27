@@ -12,14 +12,14 @@ export async function loginController(req: Request, res: Response) {
     const loginResult = await loginService(req.body);
     if (loginResult) {
       res.cookie(COOKIES_KEYS.refreshToken, loginResult.refreshToken, {
-        domain: process.env.DOMAIN,
+        // domain: process.env.DOMAIN,
         path: "/",
         secure: true,
         httpOnly: true,
         sameSite: "none"
       });
       res.cookie(COOKIES_KEYS.accessToken, loginResult.accessToken, {
-        domain: process.env.DOMAIN,
+        // domain: process.env.DOMAIN,
         path: "/",
         secure: true,
         httpOnly: true,
@@ -108,14 +108,14 @@ export async function refreshTokenController(req: Request, res: Response) {
     }
 
     res.cookie(COOKIES_KEYS.refreshToken, tokensData.refreshToken, {
-      domain: process.env.DOMAIN,
+      // domain: process.env.DOMAIN,
       path: "/",
       secure: true,
       httpOnly: true,
       sameSite: "none"
     });
     res.cookie(COOKIES_KEYS.accessToken, tokensData.accessToken, {
-      domain: process.env.DOMAIN,
+      // domain: process.env.DOMAIN,
       path: "/",
       secure: true,
       httpOnly: true,
