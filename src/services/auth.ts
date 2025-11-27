@@ -18,7 +18,7 @@ export async function loginService({ email, password }: UserLoginParams) {
   if (!validPass) throw ApiError.BadRequestError(AuthMessages.wrongPassword);
 
   const token = await generateTokens({
-    _id: userModel?._id.toString(),
+    _id: userModel._id.toString(),
     isAdmin: userModel.role === "admin"
   });
 

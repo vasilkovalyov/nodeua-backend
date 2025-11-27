@@ -11,6 +11,17 @@ export type PaymentDBModelType = {
   invoice_url: string;
   order_description: string;
   customer_email?: string;
+  is_balance_credited: boolean;
+  invoice_id: number;
+  fee_currency: string;
+  fee_deposit: number;
+  fee_service: number;
+  fee_withdrawal: number;
+  outcome_amount: number;
+  outcome_currency: string;
+  pay_address: string;
+  pay_amount: number;
+  purchase_id: string;
 };
 
 export type PaymentStatusType =

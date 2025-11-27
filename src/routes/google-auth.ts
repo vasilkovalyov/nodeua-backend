@@ -22,11 +22,11 @@ router.get("/auth/google/callback", (req, res, next) => {
       const errorType =
         err.message === "no_email" ? "no_email" : err.message === "blocked_domain" ? "blocked_domain" : "google_failed";
 
-      return res.redirect(`${WEBSITE_API_URL}/auth/login?error=${errorType}`);
+      res.redirect(`${WEBSITE_API_URL}/auth/login?error=${errorType}`);
     }
 
     if (!user) {
-      return res.redirect(`${WEBSITE_API_URL}/auth/login?error=unauthorized`);
+      res.redirect(`${WEBSITE_API_URL}/auth/login?error=unauthorized`);
     }
 
     try {

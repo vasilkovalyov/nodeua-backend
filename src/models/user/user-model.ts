@@ -12,6 +12,8 @@ export const UserSchema = new Schema<UserDBModelType>({
   },
   balance: {
     type: Number,
+    default: 0,
+    min: 0,
     required: function (this: UserDBModelType) {
       return this.role === "user";
     },

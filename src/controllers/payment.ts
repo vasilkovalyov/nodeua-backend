@@ -1,10 +1,8 @@
 import { Response, Request } from "express";
 import status from "../utils/status";
-import { createPaymentService, topUpBalanceAfterInvoiceService } from "../services/payment/payment";
+import { createPaymentService, ipnPaymentInvoiceService } from "../services/payment/payment";
 import { RequestWithAuthUserType } from "../types/request";
 import { AuthMessages } from "../constants/response-messages";
-import ApiError from "../services/api-error";
-import { verifyNowpaymentsSignature } from "../services/payment/payment.utils";
 
 export async function createInvoiceController(req: Request, res: Response) {
   try {
@@ -15,7 +13,6 @@ export async function createInvoiceController(req: Request, res: Response) {
       userId: reqWithAuthUser.user.userId,
       amount: req.body.amount
     });
-    console.log("createInvoiceController", response);
     res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (e instanceof Error) {
@@ -32,32 +29,9 @@ export async function createInvoiceController(req: Request, res: Response) {
 
 export async function ipnPaymentInvoiceController(req: Request, res: Response) {
   try {
-    console.log("ipn", req.body);
-    res.sendStatus(200);
+    await ipnPaymentInvoiceService(req.body);
+    res.status(status.SUCCESS);
   } catch (e) {
     console.log(e);
-  }
-}
-
-export async function topUpBalanceAfterInvoiceController(req: Request, res: Response) {
-  try {
-    const signature = req.headers["x-nowpayments-sig"];
-
-    if (!verifyNowpaymentsSignature(signature as string, req.body)) {
-      throw ApiError.BadRequestError(AuthMessages.invalidSignature);
-    }
-
-    const response = await topUpBalanceAfterInvoiceService(req.body);
-    res.status(status.SUCCESS).json(response);
-  } catch (e) {
-    if (e instanceof Error) {
-      res.status(status.BAD_REQUEST).json({
-        message: e.message
-      });
-    }
-
-    res.status(status.BAD_REQUEST).json({
-      message: AuthMessages.errorResponse
-    });
   }
 }

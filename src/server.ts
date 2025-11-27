@@ -8,7 +8,7 @@ import app from "./app";
   try {
     databaseConnect(process.env.MONGO_URI)
       .then(() => {
-        app.listen(PORT, () => console.log(`Server app working on port http://localhost:${PORT}`));
+        app.listen(PORT, () => console.log(`Server app working on port ${process.env.DOMAIN}`));
       })
       .catch((e) => console.log(e));
   } catch (e) {

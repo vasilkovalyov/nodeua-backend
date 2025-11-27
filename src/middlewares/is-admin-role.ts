@@ -11,7 +11,7 @@ const isAdminRoleMiddleware: RequestHandler = async (req: Request, res: Response
     const isAdminUser = await userModel.findById(reqWithAuthUser.user.userId);
 
     if (isAdminUser?.role !== "admin") {
-      return res.status(status.FORBIDDEN).json({ message: AuthMessages.userNotAdmin });
+      res.status(status.FORBIDDEN).json({ message: AuthMessages.userNotAdmin });
     }
 
     return next();

@@ -22,8 +22,7 @@ export function googleAuth() {
 
           if (!userModel) {
             userModel = await UserModel.create({
-              email: userEmail,
-              balance: 0
+              email: userEmail
             });
           }
 

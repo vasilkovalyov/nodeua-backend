@@ -2,7 +2,8 @@ import PaymentModel from "../../models/payment/payment-model";
 import {
   CreatePaymentProps,
   CreatePaymentResponseAfterSendInvoiceProps,
-  CreatePaymentResponseApiProps
+  CreatePaymentResponseApiProps,
+  IPNPaymentInvoiceProps
 } from "./payment.type";
 import UserModel from "../../models/user/user-model";
 import ApiError from "../../services/api-error";
@@ -18,7 +19,7 @@ export async function createPaymentService(props: CreatePaymentProps) {
   const response = await createNowPaymentInvoice<CreatePaymentResponseApiProps>({
     accessToken: accessToken,
     order_id: userId, // contains userId
-    amount: parseFloat(amount)
+    amount: amount
   });
 
   const data = response.data;
@@ -28,7 +29,7 @@ export async function createPaymentService(props: CreatePaymentProps) {
   }
 
   await PaymentModel.create({
-    user: userId,
+    user: data?.order_id,
     status: "waiting",
     payment_id: data?.id,
     price_amount: data?.price_amount,
@@ -40,6 +41,40 @@ export async function createPaymentService(props: CreatePaymentProps) {
   });
 
   return data;
+}
+
+export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
+  const { invoice_id, payment_status, order_id: userId } = props;
+
+  const payment = await PaymentModel.findOne({ payment_id: invoice_id });
+
+  if (!payment) {
+    throw ApiError.BadRequestError("Payment record not found");
+  }
+
+  payment.status = payment_status;
+  await payment.save();
+
+  if (payment_status === "finished" && !payment.is_balance_credited) {
+    console.log("props", props);
+    const user = await UserModel.findById(userId);
+
+    if (user) {
+      console.log("/////////////////");
+      console.log("payment", payment);
+      await UserModel.findByIdAndUpdate(userId, {
+        $inc: { balance: payment.price_amount }
+      });
+
+      payment.is_balance_credited = true;
+      await payment.save();
+      return "IPN received successfully";
+    } else {
+      throw ApiError.BadRequestError(`User with ID ${userId} not found.`);
+    }
+  }
+
+  return "IPN successfully processed";
 }
 
 export async function topUpBalanceAfterInvoiceService(props: CreatePaymentResponseAfterSendInvoiceProps) {
