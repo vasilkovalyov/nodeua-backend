@@ -1,0 +1,2 @@
+export const PAYMENT_FEE_PERCENT = 1.66;
+export const PAYMENT_WORKING_TIME_HOUR = 3600;

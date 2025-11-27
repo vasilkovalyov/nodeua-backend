@@ -5,10 +5,12 @@ export type PaymentDBModelType = {
   user: string | ObjectId | UserDBModelType;
   status: PaymentStatusType;
   payment_id: string;
-  amount: number;
-  payment_url: string;
-  currency: string;
-  description: string;
+  price_currency: string;
+  pay_currency: string;
+  price_amount: number;
+  invoice_url: string;
+  order_description: string;
+  customer_email?: string;
 };
 
 export type PaymentStatusType =

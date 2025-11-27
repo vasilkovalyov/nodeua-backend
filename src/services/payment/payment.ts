@@ -7,10 +7,10 @@ import {
 import UserModel from "../../models/user/user-model";
 import ApiError from "../../services/api-error";
 import { AuthMessages } from "../../constants/response-messages";
-import { createNowPaymentInvoice } from "./payments.utils";
+import { createNowPaymentInvoice } from "./payment.utils";
 
 export async function createPaymentService(props: CreatePaymentProps) {
-  const { userId, amount, description, cancel_url, success_url, accessToken } = props;
+  const { accessToken, userId, amount } = props;
 
   const userModel = await UserModel.findById(userId);
   if (!userModel) throw ApiError.BadRequestError(AuthMessages.userNotFound);
@@ -18,30 +18,27 @@ export async function createPaymentService(props: CreatePaymentProps) {
   const response = await createNowPaymentInvoice<CreatePaymentResponseApiProps>({
     accessToken: accessToken,
     order_id: userId, // contains userId
-    amount: parseFloat(amount),
-    cancel_url,
-    success_url
+    amount: parseFloat(amount)
   });
 
-  if (response.error && response.data === undefined) {
+  const data = response.data;
+
+  if (response.error) {
     throw ApiError.BadRequestError(response.error);
   }
-
-  const data = response.data;
 
   await PaymentModel.create({
     user: userId,
     status: "waiting",
     payment_id: data?.id,
-    amount: amount,
-    paymentUrl: data?.payment_url,
-    description: description || ""
+    price_amount: data?.price_amount,
+    invoice_url: data?.invoice_url,
+    order_description: data?.order_description || "",
+    price_currency: data?.price_currency,
+    pay_currency: data?.pay_currency,
+    customer_email: data?.customer_email
   });
 
-  if (userModel.balance) {
-    userModel.balance += parseFloat(amount);
-    userModel.save();
-  }
   return data;
 }
 

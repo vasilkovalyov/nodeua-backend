@@ -4,17 +4,18 @@ import { createPaymentService, topUpBalanceAfterInvoiceService } from "../servic
 import { RequestWithAuthUserType } from "../types/request";
 import { AuthMessages } from "../constants/response-messages";
 import ApiError from "../services/api-error";
-import { verifyNowpaymentsSignature } from "../services/payment/payments.utils";
+import { verifyNowpaymentsSignature } from "../services/payment/payment.utils";
 
 export async function createInvoiceController(req: Request, res: Response) {
   try {
     const reqWithAuthUser = req as RequestWithAuthUserType;
     const accessToken = req.headers.authorization;
     const response = await createPaymentService({
-      ...req.body,
-      accessToken: accessToken,
-      userId: reqWithAuthUser.user.userId
+      accessToken: accessToken as string,
+      userId: reqWithAuthUser.user.userId,
+      amount: req.body.amount
     });
+    console.log("createInvoiceController", response);
     res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (e instanceof Error) {
@@ -26,6 +27,15 @@ export async function createInvoiceController(req: Request, res: Response) {
     res.status(status.BAD_REQUEST).json({
       message: AuthMessages.errorResponse
     });
+  }
+}
+
+export async function ipnPaymentInvoiceController(req: Request, res: Response) {
+  try {
+    console.log("ipn", req.body);
+    res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
   }
 }
 
