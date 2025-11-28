@@ -17,13 +17,11 @@ export type PaymentDBModelType = {
   fee_deposit: number;
   fee_service: number;
   fee_withdrawal: number;
-  order_id: string;
   outcome_amount: number;
   outcome_currency: string;
   pay_address: string;
   pay_amount: number;
   purchase_id: string;
-  updated_at: number;
 };
 
 export type PaymentStatusType =

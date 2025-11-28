@@ -54,9 +54,6 @@ export const PaymentSchema = new Schema<PaymentDBModelType>(
     fee_withdrawal: {
       type: Number
     },
-    order_id: {
-      type: String
-    },
     outcome_amount: {
       type: Number
     },
@@ -71,9 +68,6 @@ export const PaymentSchema = new Schema<PaymentDBModelType>(
     },
     purchase_id: {
       type: String
-    },
-    updated_at: {
-      type: Number
     }
   },
   {

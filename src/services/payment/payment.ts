@@ -9,6 +9,7 @@ import UserModel from "../../models/user/user-model";
 import ApiError from "../../services/api-error";
 import { AuthMessages } from "../../constants/response-messages";
 import { createNowPaymentInvoice } from "./payment.utils";
+import status from "../../utils/status";
 
 export async function createPaymentService(props: CreatePaymentProps) {
   const { accessToken, userId, amount } = props;
@@ -28,8 +29,6 @@ export async function createPaymentService(props: CreatePaymentProps) {
     throw ApiError.BadRequestError(response.error);
   }
 
-  console.log("createPaymentService", data);
-
   await PaymentModel.create({
     user: userId,
     status: "waiting",
@@ -46,9 +45,35 @@ export async function createPaymentService(props: CreatePaymentProps) {
 }
 
 export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
-  const {} = props;
+  console.log("ipnPaymentInvoiceService", props);
+  const { payment_id, payment_status, order_id: userId } = props;
 
-  return 0;
+  const payment = await PaymentModel.findOne({ payment_id });
+
+  if (!payment) {
+    throw ApiError.BadRequestError("Payment record not found");
+  }
+
+  payment.status = payment_status;
+  await payment.save();
+
+  if (payment_status === "finished" && !payment.is_balance_credited) {
+    const user = await UserModel.findById(userId);
+
+    if (user) {
+      await UserModel.findByIdAndUpdate(userId, {
+        $inc: { balance: payment.pay_amount }
+      });
+
+      payment.is_balance_credited = true;
+      await payment.save();
+      return "IPN received successfully";
+    } else {
+      throw ApiError.BadRequestError(`User with ID ${userId} not found.`);
+    }
+  }
+
+  return "IPN successfully processed";
 }
 
 export async function topUpBalanceAfterInvoiceService(props: CreatePaymentResponseAfterSendInvoiceProps) {
