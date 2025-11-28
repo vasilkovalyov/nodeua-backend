@@ -32,7 +32,7 @@ export async function createInvoiceController(req: Request, res: Response) {
 
 export async function ipnPaymentInvoiceController(req: Request, res: Response) {
   try {
-    console.log("ipn", req.body);
+    console.log("ipn-payment", req.body);
     res.sendStatus(200);
   } catch (e) {
     console.log(e);

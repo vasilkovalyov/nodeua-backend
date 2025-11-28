@@ -14,8 +14,6 @@ export async function loginService({ email, password }: UserLoginParams) {
 
   if (!userModel) throw ApiError.BadRequestError(AuthMessages.userLoginNotFound);
 
-  console.log("userModel", userModel);
-
   const validPass = await bcrypt.compare(password, userModel.password);
   if (!validPass) throw ApiError.BadRequestError(AuthMessages.wrongPassword);
 
@@ -23,8 +21,6 @@ export async function loginService({ email, password }: UserLoginParams) {
     _id: userModel._id.toString(),
     isAdmin: userModel.role === "admin"
   });
-
-  console.log("generateTokens", token);
 
   return {
     _id: userModel._id,
