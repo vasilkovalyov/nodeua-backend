@@ -34,6 +34,46 @@ export const PaymentSchema = new Schema<PaymentDBModelType>(
     },
     customer_email: {
       type: String
+    },
+    is_balance_credited: {
+      type: Boolean,
+      default: false
+    },
+    invoice_id: {
+      type: Number
+    },
+    fee_currency: {
+      type: String
+    },
+    fee_deposit: {
+      type: Number
+    },
+    fee_service: {
+      type: Number
+    },
+    fee_withdrawal: {
+      type: Number
+    },
+    order_id: {
+      type: String
+    },
+    outcome_amount: {
+      type: Number
+    },
+    outcome_currency: {
+      type: String
+    },
+    pay_address: {
+      type: String
+    },
+    pay_amount: {
+      type: Number
+    },
+    purchase_id: {
+      type: String
+    },
+    updated_at: {
+      type: Number
     }
   },
   {

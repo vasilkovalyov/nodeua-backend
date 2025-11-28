@@ -11,7 +11,7 @@ export type CreatePaymentProps = {
 
 export type InvoiceCreateProps = Pick<CreatePaymentProps, "description" | "accessToken"> & {
   order_id: string;
-  amount: number;
+  amount: string;
 };
 
 export type CreatePaymentResponseApiProps = {
@@ -47,34 +47,32 @@ export type CreatePaymentResponseAfterSendInvoiceProps = {
   token_id: string;
 };
 
-export type IPNPaymentInvoiceRequestProps = {
-  pay_address: string;
+export type IPNPaymentInvoiceProps = {
   actually_paid: number;
   actually_paid_at_fiat: number;
+  fee: {
+    currency: string;
+    depositFee: number;
+    serviceFee: number;
+    withdrawalFee: number;
+  };
+  invoice_id: number;
+  order_description: string;
+  order_id: string;
+  outcome_amount: number;
+  outcome_currency: string;
+  parent_payment_id: null;
+  pay_address: string;
   pay_amount: number;
   pay_currency: string;
   payin_extra_id: number | null;
   payment_extra_ids: number | null;
-  payment_status: PaymentStatusType;
   payment_id: number;
+  payment_status: PaymentStatusType;
   price_amount: number;
   price_currency: string;
   purchase_id: string;
   updated_at: number;
-
-  // fee: {
-  //   currency: "usdtbsc";
-  //   depositFee: 0.051658;
-  //   serviceFee: 0;
-  //   withdrawalFee: 0;
-  // };
-
-  // invoice_id: number;
-  // order_description: string;
-  // order_id: string;
-  // outcome_amount: number;
-  // outcome_currency: string;
-  // parent_payment_id?: number | null;
 };
 
 export type FetchResult<T> = {

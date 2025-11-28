@@ -2,7 +2,8 @@ import PaymentModel from "../../models/payment/payment-model";
 import {
   CreatePaymentProps,
   CreatePaymentResponseAfterSendInvoiceProps,
-  CreatePaymentResponseApiProps
+  CreatePaymentResponseApiProps,
+  IPNPaymentInvoiceProps
 } from "./payment.type";
 import UserModel from "../../models/user/user-model";
 import ApiError from "../../services/api-error";
@@ -18,7 +19,7 @@ export async function createPaymentService(props: CreatePaymentProps) {
   const response = await createNowPaymentInvoice<CreatePaymentResponseApiProps>({
     accessToken: accessToken,
     order_id: userId, // contains userId
-    amount: parseFloat(amount)
+    amount: amount
   });
 
   const data = response.data;
@@ -26,6 +27,8 @@ export async function createPaymentService(props: CreatePaymentProps) {
   if (response.error) {
     throw ApiError.BadRequestError(response.error);
   }
+
+  console.log("createPaymentService", data);
 
   await PaymentModel.create({
     user: userId,
@@ -40,6 +43,12 @@ export async function createPaymentService(props: CreatePaymentProps) {
   });
 
   return data;
+}
+
+export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
+  const {} = props;
+
+  return 0;
 }
 
 export async function topUpBalanceAfterInvoiceService(props: CreatePaymentResponseAfterSendInvoiceProps) {
