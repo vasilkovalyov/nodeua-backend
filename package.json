@@ -17,6 +17,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "npx tsc",
+    "build-all": "prettier --write . && eslint . --ext .ts,.mts,.js,.mjs && npx tsc",
     "start": "NODE_ENV=production node build/server.js",
     "lint": "eslint . --ext .ts,.mts,.js,.mjs",
     "lint:fix": "eslint . --ext .ts,.mts,.js,.mjs --fix",
