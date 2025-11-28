@@ -43,7 +43,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (_, res) => {
-  return res.json({
+  res.json({
     message: "node js message"
   });
 });
