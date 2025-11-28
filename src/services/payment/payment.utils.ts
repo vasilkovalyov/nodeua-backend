@@ -31,10 +31,8 @@ export async function createNowPaymentInvoice<T>(props: InvoiceCreateProps): Pro
         "Content-Type": "application/json"
       }
     });
-    console.log("response", response);
     return response;
   } catch (e) {
-    console.log("error", e);
     const errorMessage = e instanceof Error ? e.message : "Unknown error occurred";
     return { error: errorMessage };
   }

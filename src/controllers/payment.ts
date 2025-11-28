@@ -5,6 +5,7 @@ import { RequestWithAuthUserType } from "../types/request";
 import { AuthMessages } from "../constants/response-messages";
 import ApiError from "../services/api-error";
 import { verifyNowpaymentsSignature } from "../services/payment/payment.utils";
+import { IPNPaymentInvoiceRequestProps } from "../services/payment/payment.type";
 
 export async function createInvoiceController(req: Request, res: Response) {
   try {
@@ -15,7 +16,6 @@ export async function createInvoiceController(req: Request, res: Response) {
       userId: reqWithAuthUser.user.userId,
       amount: req.body.amount
     });
-    console.log("createInvoiceController", response);
     res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (e instanceof Error) {
@@ -32,7 +32,8 @@ export async function createInvoiceController(req: Request, res: Response) {
 
 export async function ipnPaymentInvoiceController(req: Request, res: Response) {
   try {
-    console.log("ipn-payment", req.body);
+    const result = req.body as IPNPaymentInvoiceRequestProps;
+    console.log("ipn-payment", result);
     res.sendStatus(200);
   } catch (e) {
     console.log(e);
