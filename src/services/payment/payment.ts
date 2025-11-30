@@ -46,9 +46,9 @@ export async function createPaymentService(props: CreatePaymentProps) {
 
 export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
   console.log("ipnPaymentInvoiceService", props);
-  const { payment_id, payment_status, order_id: userId } = props;
+  const { invoice_id, payment_status, order_id: userId } = props;
 
-  const payment = await PaymentModel.findOne({ payment_id });
+  const payment = await PaymentModel.findOne({ invoice_id });
 
   if (!payment) {
     throw ApiError.BadRequestError("Payment record not found");
