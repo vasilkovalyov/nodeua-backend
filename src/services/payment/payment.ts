@@ -24,6 +24,7 @@ export async function createPaymentService(props: CreatePaymentProps) {
   });
 
   const data = response.data;
+  console.log("createPaymentService", data);
 
   if (response.error) {
     throw ApiError.BadRequestError(response.error);
