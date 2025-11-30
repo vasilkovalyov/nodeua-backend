@@ -4,8 +4,7 @@ import crypto from "crypto";
 import status from "../utils/status";
 
 const verifyIpnSignatureMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("eq.headers", req.headers);
-  const signature = req.headers["x-callback-sig"];
+  const signature = req.headers["x-nowpayments-sig"];
 
   if (!signature) {
     console.error("IPN: Signature missing");
@@ -16,8 +15,6 @@ const verifyIpnSignatureMiddleware: RequestHandler = async (req: Request, res: R
     .createHmac("sha512", process.env.NOWPAYMENTS_IPN_SECRET!)
     .update(JSON.stringify(req.body))
     .digest("hex");
-
-  console.log("generated", generated);
 
   if (generated !== signature) {
     console.error("IPN: Invalid signature");
