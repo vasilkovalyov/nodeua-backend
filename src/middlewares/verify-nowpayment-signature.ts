@@ -17,6 +17,8 @@ const verifyIpnSignatureMiddleware: RequestHandler = async (req: Request, res: R
     .update(JSON.stringify(req.body))
     .digest("hex");
 
+  console.log("generated", generated);
+
   if (generated !== signature) {
     console.error("IPN: Invalid signature");
     return res.status(status.FORBIDDEN).send("Invalid signature");
