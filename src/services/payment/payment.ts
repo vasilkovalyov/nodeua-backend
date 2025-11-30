@@ -24,14 +24,13 @@ export async function createPaymentService(props: CreatePaymentProps) {
   });
 
   const data = response.data;
-  console.log("createPaymentService", data);
 
   if (response.error) {
     throw ApiError.BadRequestError(response.error);
   }
 
   await PaymentModel.create({
-    user: userId,
+    user: data?.order_id,
     status: "waiting",
     payment_id: data?.id,
     price_amount: data?.price_amount,
@@ -46,10 +45,9 @@ export async function createPaymentService(props: CreatePaymentProps) {
 }
 
 export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
-  console.log("ipnPaymentInvoiceService", props);
   const { invoice_id, payment_status, order_id: userId } = props;
 
-  const payment = await PaymentModel.findOne({ invoice_id });
+  const payment = await PaymentModel.findOne({ payment_id: invoice_id });
 
   if (!payment) {
     throw ApiError.BadRequestError("Payment record not found");
