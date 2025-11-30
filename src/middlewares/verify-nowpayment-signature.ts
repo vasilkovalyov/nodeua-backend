@@ -12,7 +12,7 @@ const verifyIpnSignatureMiddleware: RequestHandler = async (req: Request, res: R
   }
 
   const generated = crypto
-    .createHmac("sha512", process.env.NOWPAYMENTS_IPN_SECRET!)
+    .createHmac("sha512", process.env.NOWPAYMENTS_IPN_KEY!)
     .update(JSON.stringify(req.body))
     .digest("hex");
 
