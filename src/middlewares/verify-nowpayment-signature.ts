@@ -4,6 +4,7 @@ import crypto from "crypto";
 import status from "../utils/status";
 
 const verifyIpnSignatureMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("eq.headers", req.headers);
   const signature = req.headers["x-callback-sig"];
 
   if (!signature) {
