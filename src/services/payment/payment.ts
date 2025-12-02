@@ -44,7 +44,17 @@ export async function createPaymentService(props: CreatePaymentProps) {
 }
 
 export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
-  const { invoice_id, payment_status, order_id: userId } = props;
+  const {
+    invoice_id,
+    payment_status,
+    order_id: userId,
+    outcome_amount,
+    fee,
+    outcome_currency,
+    pay_address,
+    pay_amount,
+    purchase_id
+  } = props;
 
   const payment = await PaymentModel.findOne({ payment_id: invoice_id });
 
@@ -63,10 +73,21 @@ export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
       console.log("/////////////////");
       console.log("payment", payment);
       await UserModel.findByIdAndUpdate(userId, {
-        $inc: { balance: payment.price_amount }
+        $inc: { balance: outcome_amount }
       });
 
       payment.is_balance_credited = true;
+      payment.outcome_amount = outcome_amount;
+
+      payment.fee_currency = fee.currency;
+      payment.fee_deposit = fee.depositFee;
+      payment.fee_service = fee.serviceFee;
+      payment.fee_withdrawal = fee.withdrawalFee;
+      payment.outcome_currency = outcome_currency;
+      payment.pay_address = pay_address;
+      payment.pay_amount = pay_amount;
+      payment.purchase_id = purchase_id;
+
       await payment.save();
       return "IPN received successfully";
     } else {
