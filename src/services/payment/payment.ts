@@ -8,7 +8,7 @@ import {
 import UserModel from "../../models/user/user-model";
 import ApiError from "../../services/api-error";
 import { AuthMessages } from "../../constants/response-messages";
-import { createNowPaymentInvoice } from "./payment.utils";
+import { createNowPaymentInvoice, getRoundedAmount } from "./payment.utils";
 
 export async function createPaymentService(props: CreatePaymentProps) {
   const { accessToken, userId, amount } = props;
@@ -23,8 +23,6 @@ export async function createPaymentService(props: CreatePaymentProps) {
   });
 
   const data = response.data;
-  console.log("createPaymentService", data);
-  console.log("/////////////////");
 
   if (response.error) {
     throw ApiError.BadRequestError(response.error);
@@ -34,11 +32,11 @@ export async function createPaymentService(props: CreatePaymentProps) {
     user: data?.order_id,
     status: "waiting",
     payment_id: data?.id,
-    price_amount: data?.price_amount,
+    price_currency: data?.price_currency,
+    price_amount: data ? getRoundedAmount(+data.price_amount) : 0,
+    pay_currency: data?.pay_currency,
     invoice_url: data?.invoice_url,
     order_description: data?.order_description || "",
-    price_currency: data?.price_currency,
-    pay_currency: data?.pay_currency,
     customer_email: data?.customer_email
   });
 
@@ -68,18 +66,15 @@ export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
   await payment.save();
 
   if (payment_status === "finished" && !payment.is_balance_credited) {
-    console.log("props", props);
     const user = await UserModel.findById(userId);
 
     if (user) {
-      console.log("/////////////////");
-      console.log("payment", payment);
       await UserModel.findByIdAndUpdate(userId, {
-        $inc: { balance: outcome_amount }
+        $inc: { balance: getRoundedAmount(outcome_amount) }
       });
 
       payment.is_balance_credited = true;
-      payment.outcome_amount = outcome_amount;
+      payment.outcome_amount = +getRoundedAmount(outcome_amount);
 
       payment.fee_currency = fee.currency;
       payment.fee_deposit = fee.depositFee;
@@ -87,7 +82,7 @@ export async function ipnPaymentInvoiceService(props: IPNPaymentInvoiceProps) {
       payment.fee_withdrawal = fee.withdrawalFee;
       payment.outcome_currency = outcome_currency;
       payment.pay_address = pay_address;
-      payment.pay_amount = pay_amount;
+      payment.pay_amount = +getRoundedAmount(pay_amount);
       payment.purchase_id = purchase_id;
 
       await payment.save();

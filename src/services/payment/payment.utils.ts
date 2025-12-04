@@ -6,7 +6,7 @@ import { PAYMENT_FEE_PERCENT } from "./payment.constant";
 
 function withPaymentFee(amount: string): string {
   const fee = PAYMENT_FEE_PERCENT / 100;
-  return (parseFloat(amount) / (1 - fee)).toFixed(2);
+  return getRoundedAmount(parseFloat(amount) / (1 - fee));
 }
 
 export async function createNowPaymentInvoice<T>(props: InvoiceCreateProps): Promise<FetchResult<T>> {
@@ -35,4 +35,8 @@ export async function createNowPaymentInvoice<T>(props: InvoiceCreateProps): Pro
     const errorMessage = e instanceof Error ? e.message : "Unknown error occurred";
     return { error: errorMessage };
   }
+}
+
+export function getRoundedAmount(amount: number): string {
+  return amount.toFixed(2);
 }
