@@ -14,6 +14,7 @@ export const profileController: RequestHandler = async (req: Request, res: Respo
     const reqWithAuthUser = req as RequestWithAuthUserType;
     const userId = reqWithAuthUser.user.userId;
     const response = await profileService(userId);
+    console.log("response", response);
     res.status(status.SUCCESS).json(response);
   } catch (e) {
     if (e instanceof Error) {
